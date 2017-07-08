@@ -1,28 +1,52 @@
 import * as $ from 'jquery';
+import './Headwyg.scss';
 
-import { IHeadwygConfig } from './interfaces/IHeadwygConfig.ts';
-import { KeyboardHandler } from './classes/KeyboardHandler.ts';
+import {MouseListener} from "./MouseListener.ts";
+import {KeyboardListener} from "./KeyboarderListener.ts";
 
-import { CaretUpHandler } from './classes/Caret/CaretUpHandler.ts';
-import { CaretDownHandler } from "./classes/Caret/CaretDownHandler.ts";
-import { CaretLeftHandler } from "./classes/Caret/CaretLeftHandler.ts";
-import { CaretRightHandler } from "./classes/Caret/CaretRightHandler.ts";
+import {OnRootClick} from "./MouseHandlers/OnRootClick.ts";
+import {OnClickOut} from './MouseHandlers/OnClickOut.ts';
+import {OnCharClick} from "./MouseHandlers/OnCharClick.ts";
 
-import "./styles/headwyg.scss";
+import {OnGeneral} from "./KeyboardHandlers/OnGeneral.ts";
+import {OnReturn} from "./KeyboardHandlers/OnReturn.ts";
+import {OnBackspace} from "./KeyboardHandlers/OnBackspace.ts";
+import {OnLeft} from "./KeyboardHandlers/OnLeft.ts";
+import {OnRight} from "./KeyboardHandlers/OnRight.ts";
+import {OnUp} from "./KeyboardHandlers/OnUp.ts";
+import {OnDown} from "./KeyboardHandlers/OnDown.ts";
+import {OnEnd} from "./KeyboardHandlers/OnEnd.ts";
+import {OnHome} from "./KeyboardHandlers/OnHome.ts";
+import {OnPageUp} from "./KeyboardHandlers/OnPageUp.ts";
+import {OnPageDown} from "./KeyboardHandlers/OnPageDown.ts";
+import {OnTab} from "./KeyboardHandlers/OnTab.ts";
 
-export default class Headwyg{
 
-	selector: string;
+export class Headwyg{
+	selector:string;
 
-	constructor(selector: string, config: IHeadwygConfig){
+	constructor(selector:string){
 		this.selector = selector;
 
-		$(this.selector).html(`<div class="headwyg-editor"></div>`);
+		$(this.selector).addClass('headwyg-editor');
 
-		KeyboardHandler.Instance()
-			.On('ArrowUp', new CaretUpHandler())
-			.On('ArrowDown', new CaretDownHandler())
-			.On('ArrowRight', new CaretRightHandler())
-			.On('ArrowLeft', new CaretLeftHandler());
+		MouseListener.Instance()
+			.On('1', new OnRootClick())
+			.On('1', new OnClickOut())
+			.On('1', new OnCharClick());
+
+		KeyboardListener.Instance()
+			.On('^[ -~]$', new OnGeneral())
+			.On('Enter', new OnReturn())
+			.On('Backspace', new OnBackspace())
+			.On('ArrowLeft', new OnLeft())
+			.On('ArrowRight', new OnRight())
+			.On('ArrowDown', new OnDown())
+			.On('ArrowUp', new OnUp())
+			.On('End', new OnEnd())
+			.On('Home', new OnHome())
+			.On('PageUp', new OnPageUp())
+			.On('PageDown', new OnPageDown())
+			.On('Tab', new OnTab());
 	}
 }

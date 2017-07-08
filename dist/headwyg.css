@@ -1,6 +1,30 @@
 .headwyg-editor {
+  display: block;
+  width: auto;
   min-height: 50px;
+  padding: 0 10px;
+  overflow: auto;
   max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
-  border: 1px dotted rgba(0, 0, 0, 0.2); }
+  margin: 0 auto; }
+
+.headwyg-editor:empty {
+  border: 1px dotted rgba(0, 0, 0, 0.2);
+  cursor: text; }
+
+.headwyg-editor .caret {
+  animation: caret-flash 1s infinite ease-in-out; }
+
+.headwyg-editor .line {
+  white-space: pre; }
+
+@keyframes caret-flash {
+  0% {
+    border-left: 1px solid black; }
+  25% {
+    border-left: 1px solid rgba(0, 0, 0, 0.5); }
+  50% {
+    border-left: 1px solid rgba(0, 0, 0, 0.1); }
+  75% {
+    border-left: 1px solid rgba(0, 0, 0, 0.5); }
+  100% {
+    border-left: 1px solid black; } }

@@ -60,51 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _Headwyg = __webpack_require__(1);
-
-var _Headwyg2 = _interopRequireDefault(_Headwyg);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var h = new _Headwyg2.default('headwyg');
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var $ = __webpack_require__(2);
-var KeyboardHandler_ts_1 = __webpack_require__(6);
-var CaretUpHandler_ts_1 = __webpack_require__(11);
-var CaretDownHandler_ts_1 = __webpack_require__(12);
-var CaretLeftHandler_ts_1 = __webpack_require__(14);
-var CaretRightHandler_ts_1 = __webpack_require__(13);
-__webpack_require__(4);
-var Headwyg = function () {
-    function Headwyg(selector, config) {
-        this.selector = selector;
-        $(this.selector).html("<div class=\"headwyg-editor\"></div>");
-        KeyboardHandler_ts_1.KeyboardHandler.Instance().On('ArrowUp', new CaretUpHandler_ts_1.CaretUpHandler()).On('ArrowDown', new CaretDownHandler_ts_1.CaretDownHandler()).On('ArrowRight', new CaretRightHandler_ts_1.CaretRightHandler()).On('ArrowLeft', new CaretLeftHandler_ts_1.CaretLeftHandler());
-    }
-    return Headwyg;
-}();
-exports["default"] = Headwyg;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9937,10 +9897,194 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	return jQuery;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret = function () {
+    function Caret() {}
+    Caret.isActive = function () {
+        return this.Element().length > 0;
+    };
+    Caret.Element = function () {
+        return $('.caret');
+    };
+    Caret.Line = function () {
+        return this.Element().closest('.line');
+    };
+    Caret.Deactivate = function () {
+        if (!this.isActive()) return;
+        //Get the current line
+        var line = this.Line();
+        //Remove the caret
+        this.Element().remove();
+        //If the line was empty remove the line as well
+        if (line.children('span').length < 1) line.remove();
+    };
+    Caret.WriteChar = function (char) {
+        if (!this.isActive()) return;
+        this.Element().before("<span class=\"char\">" + char + "</span>");
+    };
+    Caret.Backspace = function (count) {
+        if (!this.isActive()) return;
+        while (count > 0) {
+            var prev = this.Element().prev('.char');
+            if (prev.length < 1) {
+                var line = this.Line();
+                var prev_1 = line.prev('.line');
+                Caret.PlaceAfter(prev_1.children().last());
+                prev_1.append(line.children());
+                line.remove();
+                return;
+            }
+            prev.remove();
+            count--;
+        }
+    };
+    Caret.NewLine = function () {
+        if (!this.isActive()) return;
+        if (this.Line().children('.char').length < 1) return;
+        var line = this.Line();
+        var lineChildren = line.children();
+        var index = Caret.Element().index();
+        this.Deactivate();
+        var newLine = $(this.LineView(this.CaretView()));
+        line.html(lineChildren.slice(0, index));
+        newLine.html(lineChildren.slice(index));
+        line.after(newLine);
+    };
+    Caret.PlaceBefore = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).before(this.CaretView());
+    };
+    Caret.PlaceAfter = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).after(this.CaretView());
+    };
+    Caret.PlaceWithin = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).prepend(this.CaretView());
+    };
+    Caret.CaretView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var caret = $('<span class="caret"></span>');
+        if (contents) caret.html(contents);
+        return caret;
+    };
+    Caret.LineView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var line = $('<p class="line"></p>');
+        if (contents) line.html(contents);
+        return line;
+    };
+    return Caret;
+}();
+exports.Caret = Caret;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var KeyboardHandler = function () {
+    function KeyboardHandler() {}
+    KeyboardHandler.prototype.onUp = function (e) {};
+    KeyboardHandler.prototype.onDown = function (e) {};
+    KeyboardHandler.prototype.onPress = function (e) {};
+    return KeyboardHandler;
+}();
+exports.KeyboardHandler = KeyboardHandler;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var MouseHandler = function () {
+    function MouseHandler() {}
+    MouseHandler.prototype.onClick = function (e) {};
+    ;
+    return MouseHandler;
+}();
+exports.MouseHandler = MouseHandler;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Headwyg = __webpack_require__(5);
+
+var headwyg = new _Headwyg.Headwyg('headwyg');
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+__webpack_require__(7);
+var MouseListener_ts_1 = __webpack_require__(8);
+var KeyboarderListener_ts_1 = __webpack_require__(9);
+var OnRootClick_ts_1 = __webpack_require__(10);
+var OnClickOut_ts_1 = __webpack_require__(11);
+var OnCharClick_ts_1 = __webpack_require__(12);
+var OnGeneral_ts_1 = __webpack_require__(13);
+var OnReturn_ts_1 = __webpack_require__(14);
+var OnBackspace_ts_1 = __webpack_require__(15);
+var OnLeft_ts_1 = __webpack_require__(16);
+var OnRight_ts_1 = __webpack_require__(17);
+var OnUp_ts_1 = __webpack_require__(18);
+var OnDown_ts_1 = __webpack_require__(19);
+var OnEnd_ts_1 = __webpack_require__(21);
+var OnHome_ts_1 = __webpack_require__(22);
+var OnPageUp_ts_1 = __webpack_require__(23);
+var OnPageDown_ts_1 = __webpack_require__(24);
+var OnTab_ts_1 = __webpack_require__(25);
+var Headwyg = function () {
+    function Headwyg(selector) {
+        this.selector = selector;
+        $(this.selector).addClass('headwyg-editor');
+        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick());
+        KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab());
+    }
+    return Headwyg;
+}();
+exports.Headwyg = Headwyg;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9970,81 +10114,137 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(2);
-var KeyboardHandler = function () {
-    function KeyboardHandler() {
+var $ = __webpack_require__(0);
+var MouseListener = function () {
+    function MouseListener() {
         this.events = {};
-        $(document).keydown(this._onKeyDown.bind(this)).keyup(this._onKeyUp.bind(this)).keypress(this._onKeyPress.bind(this));
+        $(window).click(this._onWindowClick.bind(this));
     }
-    ;
-    KeyboardHandler.Instance = function () {
-        if (!this.instance) this.instance = new KeyboardHandler();
+    MouseListener.Instance = function () {
+        if (!this.instance) this.instance = new MouseListener();
         return this.instance;
     };
-    KeyboardHandler.prototype.On = function (event, handler) {
+    MouseListener.prototype.On = function (event, handler) {
         if (!(event in this.events)) this.events[event] = [];
         this.events[event].push(handler);
         return this;
     };
-    KeyboardHandler.prototype.Off = function (event, handler) {
-        if (!(event in this.events)) return;
-        this.events[event] = this.events[event].reduce(function (handlers, current) {
-            return current === handler ? handlers.concat([current]) : handlers;
-        }, []);
+    MouseListener.prototype.Off = function (event, handler) {
+        if (event in this.events) {
+            this.events[event] = this.events[event].reduce(function (handlers, current) {
+                return current == handler ? handlers : handlers.concat([current]);
+            }, []);
+        }
         return this;
     };
-    KeyboardHandler.prototype._onKeyDown = function (e) {
-        if (e.key in this.events) this.events[e.key].forEach(function (handler) {
+    MouseListener.prototype._onWindowClick = function (e) {
+        if (e.which.toString() in this.events) this.events[e.which].forEach(function (handler) {
+            return handler.onClick(e);
+        });
+    };
+    return MouseListener;
+}();
+exports.MouseListener = MouseListener;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var KeyboardListener = function () {
+    function KeyboardListener() {
+        this.events = {};
+        $(window).keydown(this._onKeyDown.bind(this));
+    }
+    KeyboardListener.Instance = function () {
+        if (!this.instance) this.instance = new KeyboardListener();
+        return this.instance;
+    };
+    KeyboardListener.prototype.On = function (event, handler) {
+        if (!(event in this.events)) this.events[event] = [];
+        this.events[event].push(handler);
+        return this;
+    };
+    KeyboardListener.prototype.Off = function (event, handler) {
+        if (event in this.events) {
+            this.events[event] = this.events[event].reduce(function (handlers, current) {
+                return current == handler ? handlers : handlers.concat([current]);
+            }, []);
+        }
+        return this;
+    };
+    KeyboardListener.prototype._onKeyDown = function (e) {
+        var _this = this;
+        var event = Object.keys(this.events).reduce(function (evt, current) {
+            return e.key.match(new RegExp(current)) ? _this.events[current] : evt;
+        }, []);
+        event.forEach(function (handler) {
             return handler.onDown(e);
         });
     };
-    KeyboardHandler.prototype._onKeyUp = function (e) {
-        if (e.key in this.events) this.events[e.key].forEach(function (handler) {
-            return handler.onUp(e);
-        });
-    };
-    KeyboardHandler.prototype._onKeyPress = function (e) {
-        if (e.key in this.events) this.events[e.key].forEach(function (handler) {
-            return handler.onPress(e);
-        });
-    };
-    return KeyboardHandler;
+    return KeyboardListener;
 }();
-exports.KeyboardHandler = KeyboardHandler;
+exports.KeyboardListener = KeyboardListener;
 
 /***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */,
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.__esModule = true;
-var KeyboardEventHandler = function () {
-    function KeyboardEventHandler() {}
-    KeyboardEventHandler.prototype.onUp = function (event) {};
-    KeyboardEventHandler.prototype.onDown = function (event) {};
-    KeyboardEventHandler.prototype.onPress = function (event) {};
-    return KeyboardEventHandler;
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
 }();
-exports.KeyboardEventHandler = KeyboardEventHandler;
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var OnRootClick = function (_super) {
+    __extends(OnRootClick, _super);
+    function OnRootClick() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnRootClick.prototype.onClick = function (e) {
+        if ($(e.target).hasClass('headwyg-editor')) {
+            if ($(e.target).html().trim() === "") {
+                $(e.target).append(Caret_ts_1.Caret.LineView(Caret_ts_1.Caret.CaretView()));
+            } else console.log(e.target);
+        }
+    };
+    return OnRootClick;
+}(MouseHandler_ts_1.MouseHandler);
+exports.OnRootClick = OnRootClick;
 
 /***/ }),
 /* 11 */
@@ -10070,18 +10270,24 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var KeyboardEventHandler_ts_1 = __webpack_require__(10);
-var CaretUpHandler = function (_super) {
-    __extends(CaretUpHandler, _super);
-    function CaretUpHandler() {
+var $ = __webpack_require__(0);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var Caret_ts_1 = __webpack_require__(1);
+var OnClickOut = function (_super) {
+    __extends(OnClickOut, _super);
+    function OnClickOut() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CaretUpHandler.prototype.onDown = function (e) {
-        console.log("Caret Up");
+    OnClickOut.prototype.onClick = function (e) {
+        //If the caret is not active, shortcut out
+        if (!Caret_ts_1.Caret.isActive()) return;
+        if ($(e.target).closest('.headwyg-editor').length < 1) {
+            Caret_ts_1.Caret.Deactivate();
+        }
     };
-    return CaretUpHandler;
-}(KeyboardEventHandler_ts_1.KeyboardEventHandler);
-exports.CaretUpHandler = CaretUpHandler;
+    return OnClickOut;
+}(MouseHandler_ts_1.MouseHandler);
+exports.OnClickOut = OnClickOut;
 
 /***/ }),
 /* 12 */
@@ -10107,18 +10313,24 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var KeyboardEventHandler_ts_1 = __webpack_require__(10);
-var CaretDownHandler = function (_super) {
-    __extends(CaretDownHandler, _super);
-    function CaretDownHandler() {
+var $ = __webpack_require__(0);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var Caret_ts_1 = __webpack_require__(1);
+var OnCharClick = function (_super) {
+    __extends(OnCharClick, _super);
+    function OnCharClick() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CaretDownHandler.prototype.onDown = function (e) {
-        console.log("Caret Down");
+    OnCharClick.prototype.onClick = function (e) {
+        if (!$(e.target).hasClass('char')) return;
+        var pWidth = $(e.target).innerWidth(); //use .outerWidth() if you want borders
+        var pOffset = $(e.target).offset();
+        var x = e.pageX - pOffset.left;
+        if (pWidth / 2 > x) Caret_ts_1.Caret.PlaceBefore(e.target, e.altKey);else Caret_ts_1.Caret.PlaceAfter(e.target, e.altKey);
     };
-    return CaretDownHandler;
-}(KeyboardEventHandler_ts_1.KeyboardEventHandler);
-exports.CaretDownHandler = CaretDownHandler;
+    return OnCharClick;
+}(MouseHandler_ts_1.MouseHandler);
+exports.OnCharClick = OnCharClick;
 
 /***/ }),
 /* 13 */
@@ -10144,18 +10356,26 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var KeyboardEventHandler_ts_1 = __webpack_require__(10);
-var CaretRightHandler = function (_super) {
-    __extends(CaretRightHandler, _super);
-    function CaretRightHandler() {
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnGeneral = function (_super) {
+    __extends(OnGeneral, _super);
+    function OnGeneral() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CaretRightHandler.prototype.onDown = function (e) {
-        console.log("Caret Right");
+    OnGeneral.prototype.onDown = function (e) {
+        switch (e.key) {
+            case ' ':
+                Caret_ts_1.Caret.WriteChar(' ');
+                break;
+            default:
+                Caret_ts_1.Caret.WriteChar(e.key);
+                break;
+        }
     };
-    return CaretRightHandler;
-}(KeyboardEventHandler_ts_1.KeyboardEventHandler);
-exports.CaretRightHandler = CaretRightHandler;
+    return OnGeneral;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnGeneral = OnGeneral;
 
 /***/ }),
 /* 14 */
@@ -10181,18 +10401,431 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var KeyboardEventHandler_ts_1 = __webpack_require__(10);
-var CaretLeftHandler = function (_super) {
-    __extends(CaretLeftHandler, _super);
-    function CaretLeftHandler() {
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnReturn = function (_super) {
+    __extends(OnReturn, _super);
+    function OnReturn() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CaretLeftHandler.prototype.onDown = function (e) {
-        console.log("Caret Left");
+    OnReturn.prototype.onDown = function (e) {
+        if (e.shiftKey) Caret_ts_1.Caret.WriteChar("\n");else Caret_ts_1.Caret.NewLine();
     };
-    return CaretLeftHandler;
-}(KeyboardEventHandler_ts_1.KeyboardEventHandler);
-exports.CaretLeftHandler = CaretLeftHandler;
+    return OnReturn;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnReturn = OnReturn;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnBackspace = function (_super) {
+    __extends(OnBackspace, _super);
+    function OnBackspace() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnBackspace.prototype.onDown = function (e) {
+        if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
+    };
+    return OnBackspace;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnBackspace = OnBackspace;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnLeft = function (_super) {
+    __extends(OnLeft, _super);
+    function OnLeft() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnLeft.prototype.onDown = function (e) {
+        var prev = Caret_ts_1.Caret.Element().prev('.char');
+        if (prev.length > 0) Caret_ts_1.Caret.PlaceBefore(prev);
+    };
+    return OnLeft;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnLeft = OnLeft;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnRight = function (_super) {
+    __extends(OnRight, _super);
+    function OnRight() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnRight.prototype.onDown = function (e) {
+        var next = Caret_ts_1.Caret.Element().next('.char');
+        if (next.length > 0) Caret_ts_1.Caret.PlaceAfter(next);
+    };
+    return OnRight;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnRight = OnRight;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnUp = function (_super) {
+    __extends(OnUp, _super);
+    function OnUp() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnUp.prototype.onDown = function (e) {
+        var prevLineChildren = Caret_ts_1.Caret.Line().prev('.line').children('.char');
+        if ($(prevLineChildren).length < 1) {
+            Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
+        } else {
+            var index = Caret_ts_1.Caret.Element().prev('.char').index();
+            if (index >= prevLineChildren.length) {
+                Caret_ts_1.Caret.PlaceAfter(prevLineChildren.last());
+            } else if (index > -1) {
+                Caret_ts_1.Caret.PlaceAfter(prevLineChildren[index]);
+            } else {
+                Caret_ts_1.Caret.PlaceBefore(prevLineChildren.first());
+            }
+        }
+    };
+    return OnUp;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnUp = OnUp;
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnDown = function (_super) {
+    __extends(OnDown, _super);
+    function OnDown() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnDown.prototype.onDown = function (e) {
+        var nextLineChildren = Caret_ts_1.Caret.Line().next('.line').children('.char');
+        if ($(nextLineChildren).length < 1) {
+            Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+        } else {
+            var index = Caret_ts_1.Caret.Element().prev('.char').index();
+            if (index >= nextLineChildren.length) {
+                Caret_ts_1.Caret.PlaceAfter(nextLineChildren.last());
+            } else if (index > -1) {
+                Caret_ts_1.Caret.PlaceAfter(nextLineChildren[index]);
+            } else {
+                Caret_ts_1.Caret.PlaceBefore(nextLineChildren.first());
+            }
+        }
+    };
+    return OnDown;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnDown = OnDown;
+
+/***/ }),
+/* 20 */,
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnEnd = function (_super) {
+    __extends(OnEnd, _super);
+    function OnEnd() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnEnd.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+    };
+    return OnEnd;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnEnd = OnEnd;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnHome = function (_super) {
+    __extends(OnHome, _super);
+    function OnHome() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnHome.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
+    };
+    return OnHome;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnHome = OnHome;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnPageUp = function (_super) {
+    __extends(OnPageUp, _super);
+    function OnPageUp() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnPageUp.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore($('.headwyg-editor').children('.line').first().children('.char').first());
+    };
+    return OnPageUp;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnPageUp = OnPageUp;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnPageDown = function (_super) {
+    __extends(OnPageDown, _super);
+    function OnPageDown() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnPageDown.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter($('.headwyg-editor').children('.line').last().children('.char').last());
+    };
+    return OnPageDown;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnPageDown = OnPageDown;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnTab = function (_super) {
+    __extends(OnTab, _super);
+    function OnTab() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnTab.prototype.onDown = function (e) {
+        e.preventDefault();
+        Caret_ts_1.Caret.WriteChar("\t");
+    };
+    return OnTab;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnTab = OnTab;
 
 /***/ })
 /******/ ]);
