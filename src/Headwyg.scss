@@ -13,9 +13,20 @@
 }
 .headwyg-editor .caret{
   animation: caret-flash 1s infinite ease-in-out;
+  cursor: text;
 }
 .headwyg-editor .line{
   white-space: pre;
+}
+
+.headwyg-editor .char{
+  user-select:none;
+  cursor: text;
+}
+
+.headwyg-editor .char.selected{
+  background: blue !important;
+  color: white !important;
 }
 
 @keyframes caret-flash {

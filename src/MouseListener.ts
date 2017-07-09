@@ -8,7 +8,11 @@ export class MouseListener{
 	private events:{[event:string]:MouseHandler[]} = {};
 
 	private constructor(){
-		$(window).click(this._onWindowClick.bind(this));
+		$(window)
+			.on('click', this._onWindowClick.bind(this))
+			.on('mousedown', this._onMouseDown.bind(this))
+			.on('mouseup', this._onMouseUp.bind(this))
+			.on('mousemove', this._onMouseMove.bind(this));
 	}
 	public static Instance(){
 		if(!this.instance) this.instance = new MouseListener;
@@ -35,5 +39,17 @@ export class MouseListener{
 	private _onWindowClick(e){
 		if(e.which.toString() in this.events)
 			this.events[e.which].forEach((handler:MouseHandler) => handler.onClick(e));
+	}
+	private _onMouseDown(e){
+		if(e.which.toString() in this.events)
+			this.events[e.which].forEach((handler:MouseHandler) => handler.onDown(e));
+	}
+	private _onMouseUp(e){
+		if(e.which.toString() in this.events)
+			this.events[e.which].forEach((handler:MouseHandler) => handler.onUp(e));
+	}
+	private _onMouseMove(e){
+		if(e.which.toString() in this.events)
+			this.events[e.which].forEach((handler:MouseHandler) => handler.onMove(e));
 	}
 }

@@ -68,6 +68,125 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(2);
+var Caret = function () {
+    function Caret() {}
+    Caret.isActive = function () {
+        return this.Element().length > 0;
+    };
+    Caret.Element = function () {
+        return $('.caret');
+    };
+    Caret.Line = function () {
+        return this.Element().closest('.line');
+    };
+    Caret.Deactivate = function () {
+        if (!this.isActive()) return;
+        //Get the current line
+        var line = this.Line();
+        //Remove the caret
+        this.Element().remove();
+        //If the line was empty remove the line as well
+        if (line.children('span').length < 1) line.remove();
+    };
+    Caret.WriteChar = function (char) {
+        if (!this.isActive()) return;
+        this.Element().before("<span class=\"char\">" + char + "</span>");
+    };
+    Caret.Backspace = function (count) {
+        if (!this.isActive()) return;
+        while (count > 0) {
+            var prev = this.Element().prev('.char');
+            if (prev.length < 1) {
+                var line = this.Line();
+                var prev_1 = line.prev('.line');
+                Caret.PlaceAfter(prev_1.children().last());
+                prev_1.append(line.children());
+                line.remove();
+                return;
+            }
+            prev.remove();
+            count--;
+        }
+    };
+    Caret.NewLine = function () {
+        if (!this.isActive()) return;
+        if (this.Line().children('.char').length < 1) return;
+        var line = this.Line();
+        var lineChildren = line.children();
+        var index = Caret.Element().index();
+        this.Deactivate();
+        var newLine = $(this.LineView(this.CaretView()));
+        line.html(lineChildren.slice(0, index));
+        newLine.html(lineChildren.slice(index));
+        line.after(newLine);
+    };
+    Caret.PlaceBefore = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).before(this.CaretView());
+    };
+    Caret.PlaceAfter = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).after(this.CaretView());
+    };
+    Caret.PlaceWithin = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).prepend(this.CaretView());
+    };
+    Caret.CaretView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var caret = $('<span class="caret"></span>');
+        if (contents) caret.html(contents);
+        return caret;
+    };
+    Caret.LineView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var line = $('<p class="line"></p>');
+        if (contents) line.html(contents);
+        return line;
+    };
+    return Caret;
+}();
+exports.Caret = Caret;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var KeyboardHandler = function () {
+    function KeyboardHandler() {}
+    KeyboardHandler.prototype.onUp = function (e) {};
+    KeyboardHandler.prototype.onDown = function (e) {};
+    KeyboardHandler.prototype.onPress = function (e) {};
+    return KeyboardHandler;
+}();
+exports.KeyboardHandler = KeyboardHandler;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -9900,125 +10019,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret = function () {
-    function Caret() {}
-    Caret.isActive = function () {
-        return this.Element().length > 0;
-    };
-    Caret.Element = function () {
-        return $('.caret');
-    };
-    Caret.Line = function () {
-        return this.Element().closest('.line');
-    };
-    Caret.Deactivate = function () {
-        if (!this.isActive()) return;
-        //Get the current line
-        var line = this.Line();
-        //Remove the caret
-        this.Element().remove();
-        //If the line was empty remove the line as well
-        if (line.children('span').length < 1) line.remove();
-    };
-    Caret.WriteChar = function (char) {
-        if (!this.isActive()) return;
-        this.Element().before("<span class=\"char\">" + char + "</span>");
-    };
-    Caret.Backspace = function (count) {
-        if (!this.isActive()) return;
-        while (count > 0) {
-            var prev = this.Element().prev('.char');
-            if (prev.length < 1) {
-                var line = this.Line();
-                var prev_1 = line.prev('.line');
-                Caret.PlaceAfter(prev_1.children().last());
-                prev_1.append(line.children());
-                line.remove();
-                return;
-            }
-            prev.remove();
-            count--;
-        }
-    };
-    Caret.NewLine = function () {
-        if (!this.isActive()) return;
-        if (this.Line().children('.char').length < 1) return;
-        var line = this.Line();
-        var lineChildren = line.children();
-        var index = Caret.Element().index();
-        this.Deactivate();
-        var newLine = $(this.LineView(this.CaretView()));
-        line.html(lineChildren.slice(0, index));
-        newLine.html(lineChildren.slice(index));
-        line.after(newLine);
-    };
-    Caret.PlaceBefore = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).before(this.CaretView());
-    };
-    Caret.PlaceAfter = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).after(this.CaretView());
-    };
-    Caret.PlaceWithin = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).prepend(this.CaretView());
-    };
-    Caret.CaretView = function (contents) {
-        if (contents === void 0) {
-            contents = undefined;
-        }
-        var caret = $('<span class="caret"></span>');
-        if (contents) caret.html(contents);
-        return caret;
-    };
-    Caret.LineView = function (contents) {
-        if (contents === void 0) {
-            contents = undefined;
-        }
-        var line = $('<p class="line"></p>');
-        if (contents) line.html(contents);
-        return line;
-    };
-    return Caret;
-}();
-exports.Caret = Caret;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var KeyboardHandler = function () {
-    function KeyboardHandler() {}
-    KeyboardHandler.prototype.onUp = function (e) {};
-    KeyboardHandler.prototype.onDown = function (e) {};
-    KeyboardHandler.prototype.onPress = function (e) {};
-    return KeyboardHandler;
-}();
-exports.KeyboardHandler = KeyboardHandler;
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10030,6 +10030,11 @@ var MouseHandler = function () {
     function MouseHandler() {}
     MouseHandler.prototype.onClick = function (e) {};
     ;
+    MouseHandler.prototype.onDown = function (e) {};
+    ;
+    MouseHandler.prototype.onUp = function (e) {};
+    ;
+    MouseHandler.prototype.onMove = function (e) {};
     return MouseHandler;
 }();
 exports.MouseHandler = MouseHandler;
@@ -10053,13 +10058,14 @@ var headwyg = new _Headwyg.Headwyg('headwyg');
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(0);
+var $ = __webpack_require__(2);
 __webpack_require__(7);
 var MouseListener_ts_1 = __webpack_require__(8);
 var KeyboarderListener_ts_1 = __webpack_require__(9);
 var OnRootClick_ts_1 = __webpack_require__(10);
 var OnClickOut_ts_1 = __webpack_require__(11);
 var OnCharClick_ts_1 = __webpack_require__(12);
+var HighlightHandler_ts_1 = __webpack_require__(26);
 var OnGeneral_ts_1 = __webpack_require__(13);
 var OnReturn_ts_1 = __webpack_require__(14);
 var OnBackspace_ts_1 = __webpack_require__(15);
@@ -10067,16 +10073,16 @@ var OnLeft_ts_1 = __webpack_require__(16);
 var OnRight_ts_1 = __webpack_require__(17);
 var OnUp_ts_1 = __webpack_require__(18);
 var OnDown_ts_1 = __webpack_require__(19);
-var OnEnd_ts_1 = __webpack_require__(21);
-var OnHome_ts_1 = __webpack_require__(22);
-var OnPageUp_ts_1 = __webpack_require__(23);
-var OnPageDown_ts_1 = __webpack_require__(24);
-var OnTab_ts_1 = __webpack_require__(25);
+var OnEnd_ts_1 = __webpack_require__(20);
+var OnHome_ts_1 = __webpack_require__(21);
+var OnPageUp_ts_1 = __webpack_require__(22);
+var OnPageDown_ts_1 = __webpack_require__(23);
+var OnTab_ts_1 = __webpack_require__(24);
 var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
-        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick());
+        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler());
         KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab());
     }
     return Headwyg;
@@ -10127,11 +10133,11 @@ module.exports = function (module) {
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(0);
+var $ = __webpack_require__(2);
 var MouseListener = function () {
     function MouseListener() {
         this.events = {};
-        $(window).click(this._onWindowClick.bind(this));
+        $(window).on('click', this._onWindowClick.bind(this)).on('mousedown', this._onMouseDown.bind(this)).on('mouseup', this._onMouseUp.bind(this)).on('mousemove', this._onMouseMove.bind(this));
     }
     MouseListener.Instance = function () {
         if (!this.instance) this.instance = new MouseListener();
@@ -10155,6 +10161,21 @@ var MouseListener = function () {
             return handler.onClick(e);
         });
     };
+    MouseListener.prototype._onMouseDown = function (e) {
+        if (e.which.toString() in this.events) this.events[e.which].forEach(function (handler) {
+            return handler.onDown(e);
+        });
+    };
+    MouseListener.prototype._onMouseUp = function (e) {
+        if (e.which.toString() in this.events) this.events[e.which].forEach(function (handler) {
+            return handler.onUp(e);
+        });
+    };
+    MouseListener.prototype._onMouseMove = function (e) {
+        if (e.which.toString() in this.events) this.events[e.which].forEach(function (handler) {
+            return handler.onMove(e);
+        });
+    };
     return MouseListener;
 }();
 exports.MouseListener = MouseListener;
@@ -10167,7 +10188,7 @@ exports.MouseListener = MouseListener;
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(0);
+var $ = __webpack_require__(2);
 var KeyboardListener = function () {
     function KeyboardListener() {
         this.events = {};
@@ -10227,8 +10248,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret_ts_1 = __webpack_require__(1);
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var OnRootClick = function (_super) {
     __extends(OnRootClick, _super);
@@ -10270,9 +10291,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
+var $ = __webpack_require__(2);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var Caret_ts_1 = __webpack_require__(1);
+var Caret_ts_1 = __webpack_require__(0);
 var OnClickOut = function (_super) {
     __extends(OnClickOut, _super);
     function OnClickOut() {
@@ -10313,9 +10334,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
+var $ = __webpack_require__(2);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var Caret_ts_1 = __webpack_require__(1);
+var Caret_ts_1 = __webpack_require__(0);
 var OnCharClick = function (_super) {
     __extends(OnCharClick, _super);
     function OnCharClick() {
@@ -10356,14 +10377,20 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnGeneral = function (_super) {
     __extends(OnGeneral, _super);
     function OnGeneral() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnGeneral.prototype.onDown = function (e) {
+        var selected = $('.char.selected');
+        if (selected.length > 0) {
+            Caret_ts_1.Caret.PlaceBefore(selected.first());
+            selected.remove();
+        }
         switch (e.key) {
             case ' ':
                 Caret_ts_1.Caret.WriteChar(' ');
@@ -10401,8 +10428,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnReturn = function (_super) {
     __extends(OnReturn, _super);
     function OnReturn() {
@@ -10439,15 +10466,21 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnBackspace = function (_super) {
     __extends(OnBackspace, _super);
     function OnBackspace() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnBackspace.prototype.onDown = function (e) {
-        if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
+        var selected = $('.char.selected');
+        if (selected.length < 1) {
+            if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
+        } else {
+            $(selected).remove();
+        }
     };
     return OnBackspace;
 }(KeyboardHandler_ts_1.KeyboardHandler);
@@ -10477,8 +10510,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnLeft = function (_super) {
     __extends(OnLeft, _super);
     function OnLeft() {
@@ -10516,8 +10549,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnRight = function (_super) {
     __extends(OnRight, _super);
     function OnRight() {
@@ -10555,9 +10588,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnUp = function (_super) {
     __extends(OnUp, _super);
     function OnUp() {
@@ -10606,9 +10639,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
 var OnDown = function (_super) {
     __extends(OnDown, _super);
     function OnDown() {
@@ -10634,7 +10667,44 @@ var OnDown = function (_super) {
 exports.OnDown = OnDown;
 
 /***/ }),
-/* 20 */,
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
+var OnEnd = function (_super) {
+    __extends(OnEnd, _super);
+    function OnEnd() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnEnd.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+    };
+    return OnEnd;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnEnd = OnEnd;
+
+/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10658,19 +10728,19 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnEnd = function (_super) {
-    __extends(OnEnd, _super);
-    function OnEnd() {
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
+var OnHome = function (_super) {
+    __extends(OnHome, _super);
+    function OnHome() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnEnd.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+    OnHome.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
     };
-    return OnEnd;
+    return OnHome;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnEnd = OnEnd;
+exports.OnHome = OnHome;
 
 /***/ }),
 /* 22 */
@@ -10696,19 +10766,20 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnHome = function (_super) {
-    __extends(OnHome, _super);
-    function OnHome() {
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
+var OnPageUp = function (_super) {
+    __extends(OnPageUp, _super);
+    function OnPageUp() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnHome.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
+    OnPageUp.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore($('.headwyg-editor').children('.line').first().children('.char').first());
     };
-    return OnHome;
+    return OnPageUp;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnHome = OnHome;
+exports.OnPageUp = OnPageUp;
 
 /***/ }),
 /* 23 */
@@ -10734,20 +10805,20 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnPageUp = function (_super) {
-    __extends(OnPageUp, _super);
-    function OnPageUp() {
+var $ = __webpack_require__(2);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
+var OnPageDown = function (_super) {
+    __extends(OnPageDown, _super);
+    function OnPageDown() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnPageUp.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceBefore($('.headwyg-editor').children('.line').first().children('.char').first());
+    OnPageDown.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter($('.headwyg-editor').children('.line').last().children('.char').last());
     };
-    return OnPageUp;
+    return OnPageDown;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnPageUp = OnPageUp;
+exports.OnPageDown = OnPageDown;
 
 /***/ }),
 /* 24 */
@@ -10773,23 +10844,24 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(0);
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnPageDown = function (_super) {
-    __extends(OnPageDown, _super);
-    function OnPageDown() {
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(1);
+var OnTab = function (_super) {
+    __extends(OnTab, _super);
+    function OnTab() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnPageDown.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceAfter($('.headwyg-editor').children('.line').last().children('.char').last());
+    OnTab.prototype.onDown = function (e) {
+        e.preventDefault();
+        Caret_ts_1.Caret.WriteChar("\t");
     };
-    return OnPageDown;
+    return OnTab;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnPageDown = OnPageDown;
+exports.OnTab = OnTab;
 
 /***/ }),
-/* 25 */
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10812,20 +10884,26 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(1);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnTab = function (_super) {
-    __extends(OnTab, _super);
-    function OnTab() {
+var $ = __webpack_require__(2);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var HighlightHandler = function (_super) {
+    __extends(HighlightHandler, _super);
+    function HighlightHandler() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnTab.prototype.onDown = function (e) {
-        e.preventDefault();
-        Caret_ts_1.Caret.WriteChar("\t");
+    HighlightHandler.prototype.onDown = function (e) {
+        if (!e.shiftKey) $('.selected').removeClass('selected');
     };
-    return OnTab;
-}(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnTab = OnTab;
+    HighlightHandler.prototype.onUp = function (e) {
+        console.log($('.selected'));
+    };
+    HighlightHandler.prototype.onMove = function (e) {
+        if ($(e.target).hasClass('char')) '';
+        $(e.target).addClass('selected');
+    };
+    return HighlightHandler;
+}(MouseHandler_ts_1.MouseHandler);
+exports.HighlightHandler = HighlightHandler;
 
 /***/ })
 /******/ ]);
