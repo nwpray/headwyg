@@ -71,7 +71,7 @@
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var Caret = function () {
     function Caret() {}
     Caret.isActive = function () {
@@ -94,7 +94,9 @@ var Caret = function () {
     };
     Caret.WriteChar = function (char) {
         if (!this.isActive()) return;
-        this.Element().before("<span class=\"char\">" + char + "</span>");
+        var caret = $("<span class=\"char\">" + char + "</span>");
+        caret.css(this.GetStyles());
+        this.Element().before(caret);
     };
     Caret.Backspace = function (count) {
         if (!this.isActive()) return;
@@ -150,6 +152,7 @@ var Caret = function () {
             contents = undefined;
         }
         var caret = $('<span class="caret"></span>');
+        caret.css(this.GetStyles());
         if (contents) caret.html(contents);
         return caret;
     };
@@ -161,29 +164,17 @@ var Caret = function () {
         if (contents) line.html(contents);
         return line;
     };
+    Caret.GetStyles = function () {
+        return {
+            'font-size': $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val()
+        };
+    };
     return Caret;
 }();
 exports.Caret = Caret;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-var KeyboardHandler = function () {
-    function KeyboardHandler() {}
-    KeyboardHandler.prototype.onUp = function (e) {};
-    KeyboardHandler.prototype.onDown = function (e) {};
-    KeyboardHandler.prototype.onPress = function (e) {};
-    return KeyboardHandler;
-}();
-exports.KeyboardHandler = KeyboardHandler;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10019,6 +10010,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var KeyboardHandler = function () {
+    function KeyboardHandler() {}
+    KeyboardHandler.prototype.onUp = function (e) {};
+    KeyboardHandler.prototype.onDown = function (e) {};
+    KeyboardHandler.prototype.onPress = function (e) {};
+    return KeyboardHandler;
+}();
+exports.KeyboardHandler = KeyboardHandler;
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10058,32 +10066,34 @@ var headwyg = new _Headwyg.Headwyg('headwyg');
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 __webpack_require__(7);
 var MouseListener_ts_1 = __webpack_require__(8);
 var KeyboarderListener_ts_1 = __webpack_require__(9);
+var Toolbar_ts_1 = __webpack_require__(27);
 var OnRootClick_ts_1 = __webpack_require__(10);
 var OnClickOut_ts_1 = __webpack_require__(11);
 var OnCharClick_ts_1 = __webpack_require__(12);
-var HighlightHandler_ts_1 = __webpack_require__(26);
-var OnGeneral_ts_1 = __webpack_require__(13);
-var OnReturn_ts_1 = __webpack_require__(14);
-var OnBackspace_ts_1 = __webpack_require__(15);
-var OnLeft_ts_1 = __webpack_require__(16);
-var OnRight_ts_1 = __webpack_require__(17);
-var OnUp_ts_1 = __webpack_require__(18);
-var OnDown_ts_1 = __webpack_require__(19);
-var OnEnd_ts_1 = __webpack_require__(20);
-var OnHome_ts_1 = __webpack_require__(21);
-var OnPageUp_ts_1 = __webpack_require__(22);
-var OnPageDown_ts_1 = __webpack_require__(23);
-var OnTab_ts_1 = __webpack_require__(24);
+var HighlightHandler_ts_1 = __webpack_require__(13);
+var OnGeneral_ts_1 = __webpack_require__(14);
+var OnReturn_ts_1 = __webpack_require__(15);
+var OnBackspace_ts_1 = __webpack_require__(16);
+var OnLeft_ts_1 = __webpack_require__(17);
+var OnRight_ts_1 = __webpack_require__(18);
+var OnUp_ts_1 = __webpack_require__(19);
+var OnDown_ts_1 = __webpack_require__(20);
+var OnEnd_ts_1 = __webpack_require__(21);
+var OnHome_ts_1 = __webpack_require__(22);
+var OnPageUp_ts_1 = __webpack_require__(23);
+var OnPageDown_ts_1 = __webpack_require__(24);
+var OnTab_ts_1 = __webpack_require__(25);
 var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
         MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler());
         KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab());
+        var toolbar = new Toolbar_ts_1.Toolbar();
     }
     return Headwyg;
 }();
@@ -10133,7 +10143,7 @@ module.exports = function (module) {
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var MouseListener = function () {
     function MouseListener() {
         this.events = {};
@@ -10188,7 +10198,7 @@ exports.MouseListener = MouseListener;
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var KeyboardListener = function () {
     function KeyboardListener() {
         this.events = {};
@@ -10248,7 +10258,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var OnRootClick = function (_super) {
@@ -10260,7 +10270,7 @@ var OnRootClick = function (_super) {
         if ($(e.target).hasClass('headwyg-editor')) {
             if ($(e.target).html().trim() === "") {
                 $(e.target).append(Caret_ts_1.Caret.LineView(Caret_ts_1.Caret.CaretView()));
-            } else console.log(e.target);
+            }
         }
     };
     return OnRootClick;
@@ -10291,7 +10301,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var Caret_ts_1 = __webpack_require__(0);
 var OnClickOut = function (_super) {
@@ -10302,7 +10312,7 @@ var OnClickOut = function (_super) {
     OnClickOut.prototype.onClick = function (e) {
         //If the caret is not active, shortcut out
         if (!Caret_ts_1.Caret.isActive()) return;
-        if ($(e.target).closest('.headwyg-editor').length < 1) {
+        if ($(e.target).closest('.headwyg-editor').length < 1 && $(e.target).closest('.headwyg-toolbar').length < 1) {
             Caret_ts_1.Caret.Deactivate();
         }
     };
@@ -10334,7 +10344,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var Caret_ts_1 = __webpack_require__(0);
 var OnCharClick = function (_super) {
@@ -10377,32 +10387,24 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
-var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnGeneral = function (_super) {
-    __extends(OnGeneral, _super);
-    function OnGeneral() {
+var $ = __webpack_require__(1);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var HighlightHandler = function (_super) {
+    __extends(HighlightHandler, _super);
+    function HighlightHandler() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnGeneral.prototype.onDown = function (e) {
-        var selected = $('.char.selected');
-        if (selected.length > 0) {
-            Caret_ts_1.Caret.PlaceBefore(selected.first());
-            selected.remove();
-        }
-        switch (e.key) {
-            case ' ':
-                Caret_ts_1.Caret.WriteChar(' ');
-                break;
-            default:
-                Caret_ts_1.Caret.WriteChar(e.key);
-                break;
-        }
+    HighlightHandler.prototype.onDown = function (e) {
+        if (!e.shiftKey && $(e.target).closest('.headwyg-toolbar').length < 1) $('.selected').removeClass('selected');
     };
-    return OnGeneral;
-}(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnGeneral = OnGeneral;
+    HighlightHandler.prototype.onUp = function (e) {};
+    HighlightHandler.prototype.onMove = function (e) {
+        if ($(e.target).hasClass('char')) '';
+        $(e.target).addClass('selected');
+    };
+    return HighlightHandler;
+}(MouseHandler_ts_1.MouseHandler);
+exports.HighlightHandler = HighlightHandler;
 
 /***/ }),
 /* 14 */
@@ -10428,19 +10430,32 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnReturn = function (_super) {
-    __extends(OnReturn, _super);
-    function OnReturn() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnGeneral = function (_super) {
+    __extends(OnGeneral, _super);
+    function OnGeneral() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnReturn.prototype.onDown = function (e) {
-        if (e.shiftKey) Caret_ts_1.Caret.WriteChar("\n");else Caret_ts_1.Caret.NewLine();
+    OnGeneral.prototype.onDown = function (e) {
+        var selected = $('.char.selected');
+        if (selected.length > 0) {
+            Caret_ts_1.Caret.PlaceBefore(selected.first());
+            selected.remove();
+        }
+        switch (e.key) {
+            case ' ':
+                Caret_ts_1.Caret.WriteChar(' ');
+                break;
+            default:
+                Caret_ts_1.Caret.WriteChar(e.key);
+                break;
+        }
     };
-    return OnReturn;
+    return OnGeneral;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnReturn = OnReturn;
+exports.OnGeneral = OnGeneral;
 
 /***/ }),
 /* 15 */
@@ -10466,25 +10481,19 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnBackspace = function (_super) {
-    __extends(OnBackspace, _super);
-    function OnBackspace() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnReturn = function (_super) {
+    __extends(OnReturn, _super);
+    function OnReturn() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnBackspace.prototype.onDown = function (e) {
-        var selected = $('.char.selected');
-        if (selected.length < 1) {
-            if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
-        } else {
-            $(selected).remove();
-        }
+    OnReturn.prototype.onDown = function (e) {
+        if (e.shiftKey) Caret_ts_1.Caret.WriteChar("\n");else Caret_ts_1.Caret.NewLine();
     };
-    return OnBackspace;
+    return OnReturn;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnBackspace = OnBackspace;
+exports.OnReturn = OnReturn;
 
 /***/ }),
 /* 16 */
@@ -10510,20 +10519,25 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnLeft = function (_super) {
-    __extends(OnLeft, _super);
-    function OnLeft() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnBackspace = function (_super) {
+    __extends(OnBackspace, _super);
+    function OnBackspace() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnLeft.prototype.onDown = function (e) {
-        var prev = Caret_ts_1.Caret.Element().prev('.char');
-        if (prev.length > 0) Caret_ts_1.Caret.PlaceBefore(prev);
+    OnBackspace.prototype.onDown = function (e) {
+        var selected = $('.char.selected');
+        if (selected.length < 1) {
+            if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
+        } else {
+            $(selected).remove();
+        }
     };
-    return OnLeft;
+    return OnBackspace;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnLeft = OnLeft;
+exports.OnBackspace = OnBackspace;
 
 /***/ }),
 /* 17 */
@@ -10550,19 +10564,19 @@ var __extends = undefined && undefined.__extends || function () {
 }();
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnRight = function (_super) {
-    __extends(OnRight, _super);
-    function OnRight() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnLeft = function (_super) {
+    __extends(OnLeft, _super);
+    function OnLeft() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnRight.prototype.onDown = function (e) {
-        var next = Caret_ts_1.Caret.Element().next('.char');
-        if (next.length > 0) Caret_ts_1.Caret.PlaceAfter(next);
+    OnLeft.prototype.onDown = function (e) {
+        var prev = Caret_ts_1.Caret.Element().prev('.char');
+        if (prev.length > 0) Caret_ts_1.Caret.PlaceBefore(prev);
     };
-    return OnRight;
+    return OnLeft;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnRight = OnRight;
+exports.OnLeft = OnLeft;
 
 /***/ }),
 /* 18 */
@@ -10588,32 +10602,20 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnUp = function (_super) {
-    __extends(OnUp, _super);
-    function OnUp() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnRight = function (_super) {
+    __extends(OnRight, _super);
+    function OnRight() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnUp.prototype.onDown = function (e) {
-        var prevLineChildren = Caret_ts_1.Caret.Line().prev('.line').children('.char');
-        if ($(prevLineChildren).length < 1) {
-            Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
-        } else {
-            var index = Caret_ts_1.Caret.Element().prev('.char').index();
-            if (index >= prevLineChildren.length) {
-                Caret_ts_1.Caret.PlaceAfter(prevLineChildren.last());
-            } else if (index > -1) {
-                Caret_ts_1.Caret.PlaceAfter(prevLineChildren[index]);
-            } else {
-                Caret_ts_1.Caret.PlaceBefore(prevLineChildren.first());
-            }
-        }
+    OnRight.prototype.onDown = function (e) {
+        var next = Caret_ts_1.Caret.Element().next('.char');
+        if (next.length > 0) Caret_ts_1.Caret.PlaceAfter(next);
     };
-    return OnUp;
+    return OnRight;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnUp = OnUp;
+exports.OnRight = OnRight;
 
 /***/ }),
 /* 19 */
@@ -10639,32 +10641,32 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnDown = function (_super) {
-    __extends(OnDown, _super);
-    function OnDown() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnUp = function (_super) {
+    __extends(OnUp, _super);
+    function OnUp() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnDown.prototype.onDown = function (e) {
-        var nextLineChildren = Caret_ts_1.Caret.Line().next('.line').children('.char');
-        if ($(nextLineChildren).length < 1) {
-            Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+    OnUp.prototype.onDown = function (e) {
+        var prevLineChildren = Caret_ts_1.Caret.Line().prev('.line').children('.char');
+        if ($(prevLineChildren).length < 1) {
+            Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
         } else {
             var index = Caret_ts_1.Caret.Element().prev('.char').index();
-            if (index >= nextLineChildren.length) {
-                Caret_ts_1.Caret.PlaceAfter(nextLineChildren.last());
+            if (index >= prevLineChildren.length) {
+                Caret_ts_1.Caret.PlaceAfter(prevLineChildren.last());
             } else if (index > -1) {
-                Caret_ts_1.Caret.PlaceAfter(nextLineChildren[index]);
+                Caret_ts_1.Caret.PlaceAfter(prevLineChildren[index]);
             } else {
-                Caret_ts_1.Caret.PlaceBefore(nextLineChildren.first());
+                Caret_ts_1.Caret.PlaceBefore(prevLineChildren.first());
             }
         }
     };
-    return OnDown;
+    return OnUp;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnDown = OnDown;
+exports.OnUp = OnUp;
 
 /***/ }),
 /* 20 */
@@ -10690,19 +10692,32 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnEnd = function (_super) {
-    __extends(OnEnd, _super);
-    function OnEnd() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnDown = function (_super) {
+    __extends(OnDown, _super);
+    function OnDown() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnEnd.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+    OnDown.prototype.onDown = function (e) {
+        var nextLineChildren = Caret_ts_1.Caret.Line().next('.line').children('.char');
+        if ($(nextLineChildren).length < 1) {
+            Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
+        } else {
+            var index = Caret_ts_1.Caret.Element().prev('.char').index();
+            if (index >= nextLineChildren.length) {
+                Caret_ts_1.Caret.PlaceAfter(nextLineChildren.last());
+            } else if (index > -1) {
+                Caret_ts_1.Caret.PlaceAfter(nextLineChildren[index]);
+            } else {
+                Caret_ts_1.Caret.PlaceBefore(nextLineChildren.first());
+            }
+        }
     };
-    return OnEnd;
+    return OnDown;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnEnd = OnEnd;
+exports.OnDown = OnDown;
 
 /***/ }),
 /* 21 */
@@ -10729,18 +10744,18 @@ var __extends = undefined && undefined.__extends || function () {
 }();
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnHome = function (_super) {
-    __extends(OnHome, _super);
-    function OnHome() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnEnd = function (_super) {
+    __extends(OnEnd, _super);
+    function OnEnd() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnHome.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
+    OnEnd.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter(Caret_ts_1.Caret.Line().children('.char').last());
     };
-    return OnHome;
+    return OnEnd;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnHome = OnHome;
+exports.OnEnd = OnEnd;
 
 /***/ }),
 /* 22 */
@@ -10766,20 +10781,19 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnPageUp = function (_super) {
-    __extends(OnPageUp, _super);
-    function OnPageUp() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnHome = function (_super) {
+    __extends(OnHome, _super);
+    function OnHome() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnPageUp.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceBefore($('.headwyg-editor').children('.line').first().children('.char').first());
+    OnHome.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
     };
-    return OnPageUp;
+    return OnHome;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnPageUp = OnPageUp;
+exports.OnHome = OnHome;
 
 /***/ }),
 /* 23 */
@@ -10805,20 +10819,20 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnPageDown = function (_super) {
-    __extends(OnPageDown, _super);
-    function OnPageDown() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnPageUp = function (_super) {
+    __extends(OnPageUp, _super);
+    function OnPageUp() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnPageDown.prototype.onDown = function (e) {
-        Caret_ts_1.Caret.PlaceAfter($('.headwyg-editor').children('.line').last().children('.char').last());
+    OnPageUp.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceBefore($('.headwyg-editor').children('.line').first().children('.char').first());
     };
-    return OnPageDown;
+    return OnPageUp;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnPageDown = OnPageDown;
+exports.OnPageUp = OnPageUp;
 
 /***/ }),
 /* 24 */
@@ -10844,24 +10858,23 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
+var $ = __webpack_require__(1);
 var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(1);
-var OnTab = function (_super) {
-    __extends(OnTab, _super);
-    function OnTab() {
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnPageDown = function (_super) {
+    __extends(OnPageDown, _super);
+    function OnPageDown() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnTab.prototype.onDown = function (e) {
-        e.preventDefault();
-        Caret_ts_1.Caret.WriteChar("\t");
+    OnPageDown.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.PlaceAfter($('.headwyg-editor').children('.line').last().children('.char').last());
     };
-    return OnTab;
+    return OnPageDown;
 }(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnTab = OnTab;
+exports.OnPageDown = OnPageDown;
 
 /***/ }),
-/* 25 */,
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10884,26 +10897,71 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(2);
-var MouseHandler_ts_1 = __webpack_require__(3);
-var HighlightHandler = function (_super) {
-    __extends(HighlightHandler, _super);
-    function HighlightHandler() {
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnTab = function (_super) {
+    __extends(OnTab, _super);
+    function OnTab() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    HighlightHandler.prototype.onDown = function (e) {
-        if (!e.shiftKey) $('.selected').removeClass('selected');
+    OnTab.prototype.onDown = function (e) {
+        e.preventDefault();
+        Caret_ts_1.Caret.WriteChar("\t");
     };
-    HighlightHandler.prototype.onUp = function (e) {
-        console.log($('.selected'));
+    return OnTab;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnTab = OnTab;
+
+/***/ }),
+/* 26 */,
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(1);
+var Caret_ts_1 = __webpack_require__(0);
+var Toolbar = function () {
+    function Toolbar() {
+        $('.headwyg-editor').after(this.ToolBarView());
+    }
+    Toolbar.prototype.ToolBarView = function () {
+        var toolbar = $("<div class=\"headwyg-toolbar\"></div>");
+        var fontSize = $('<select id="font-size"></select>');
+        [0.67, 0.83, 1, 1.17, 1.5, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20].forEach(function (size) {
+            return fontSize.append("<option value=\"" + size + "\">" + size + "</option>");
+        });
+        toolbar.append(fontSize);
+        $(fontSize).val(1);
+        $(fontSize).on('change', this.UpdateStyles);
+        var fontScale = $('<select id="font-scale"></select>');
+        ['pt', 'px', 'em', 'rem'].forEach(function (scale) {
+            return fontScale.append("<option value=\"" + scale + "\">" + scale + "</option>");
+        });
+        toolbar.append(fontScale);
+        $(fontScale).val('em');
+        $(fontScale).on('change', this.UpdateStyles);
+        return toolbar;
     };
-    HighlightHandler.prototype.onMove = function (e) {
-        if ($(e.target).hasClass('char')) '';
-        $(e.target).addClass('selected');
+    Toolbar.prototype.UpdateStyles = function () {
+        $('.char.selected').css(Caret_ts_1.Caret.GetStyles());
+        $('.caret').css(Caret_ts_1.Caret.GetStyles());
     };
-    return HighlightHandler;
-}(MouseHandler_ts_1.MouseHandler);
-exports.HighlightHandler = HighlightHandler;
+    Toolbar.prototype.UnpackStyles = function (element) {
+        var styles = $(element).attr('style').split(';');
+        return styles.reduce(function (obj, current) {
+            var parts = current.split(':').map(function (part) {
+                return part.trim();
+            });
+            obj[parts[0]] = parts[1];
+            return obj;
+        }, {});
+    };
+    return Toolbar;
+}();
+exports.Toolbar = Toolbar;
 
 /***/ })
 /******/ ]);

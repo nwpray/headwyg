@@ -6,11 +6,10 @@ import {Caret} from "../Caret.ts";
 
 export class HighlightHandler extends MouseHandler{
 	onDown(e){
-		if(!e.shiftKey)
+		if(!e.shiftKey && $(e.target).closest('.headwyg-toolbar').length < 1)
 			$('.selected').removeClass('selected');
 	}
 	onUp(e){
-		console.log($('.selected'));
 	}
 	onMove(e){
 		if($(e.target).hasClass('char'))''

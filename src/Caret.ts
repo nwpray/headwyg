@@ -29,7 +29,10 @@ export class Caret{
 	public static WriteChar(char:string){
 		if(!this.isActive()) return;
 
-		this.Element().before(`<span class="char">${char}</span>`);
+		let caret = $(`<span class="char">${char}</span>`);
+		caret.css(this.GetStyles());
+
+		this.Element().before(caret);
 	}
 	public static Backspace(count: number){
 		if(!this.isActive()) return;
@@ -94,6 +97,7 @@ export class Caret{
 
 	public static CaretView(contents = undefined){
 		let caret = $('<span class="caret"></span>');
+		caret.css(this.GetStyles());
 
 		if(contents)
 			caret.html(contents);
@@ -107,5 +111,11 @@ export class Caret{
 			line.html(contents);
 
 		return line;
+	}
+
+	public static GetStyles(){
+		return {
+			'font-size' : $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val()
+		};
 	}
 }

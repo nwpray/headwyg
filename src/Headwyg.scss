@@ -4,7 +4,7 @@
   min-height: 50px;
   padding: 0 10px;
   overflow: auto;
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
 }
 .headwyg-editor:empty{
@@ -23,10 +23,29 @@
   user-select:none;
   cursor: text;
 }
-
 .headwyg-editor .char.selected{
   background: blue !important;
   color: white !important;
+}
+
+.headwyg-toolbar{
+  position:fixed;
+  bottom: 0;
+  right:0;
+  left:0;
+  width:auto;
+  background: rgba(0,0,0,0.2);
+  padding: 12px;
+}
+.headwyg-toolbar select,
+.headwyg-toolbar input{
+  background: rgba(255, 255, 255 ,0.2);
+  border: 1px solid rgba(0,0,0,0.6);
+  padding: 5px 5px 5px 15px;
+  line-height: 12px;
+  font-size: 12px;
+  border-radius: 2px;
+  margin-right: 5px;
 }
 
 @keyframes caret-flash {

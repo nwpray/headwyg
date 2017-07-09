@@ -3,6 +3,7 @@ import './Headwyg.scss';
 
 import {MouseListener} from "./MouseListener.ts";
 import {KeyboardListener} from "./KeyboarderListener.ts";
+import {Toolbar} from "./Toolbar.ts";
 
 import {OnRootClick} from "./MouseHandlers/OnRootClick.ts";
 import {OnClickOut} from './MouseHandlers/OnClickOut.ts';
@@ -49,5 +50,7 @@ export class Headwyg{
 			.On('PageUp', new OnPageUp())
 			.On('PageDown', new OnPageDown())
 			.On('Tab', new OnTab());
+
+		let toolbar = new Toolbar();
 	}
 }

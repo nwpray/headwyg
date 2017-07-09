@@ -9,8 +9,6 @@ export class OnRootClick extends MouseHandler{
 			if($(e.target).html().trim() === ""){
 				$(e.target).append(Caret.LineView(Caret.CaretView()));
 			}
-			else
-				console.log(e.target);
 		}
 	}
 }
