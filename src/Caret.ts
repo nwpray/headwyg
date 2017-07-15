@@ -29,10 +29,10 @@ export class Caret{
 	public static WriteChar(char:string){
 		if(!this.isActive()) return;
 
-		let caret = $(`<span class="char">${char}</span>`);
-		caret.css(this.GetStyles());
+		let element = $(`<span class="char">${char}</span>`);
+		element.css(this.GetStyles());
 
-		this.Element().before(caret);
+		this.Element().before(element);
 	}
 	public static Backspace(count: number){
 		if(!this.isActive()) return;
@@ -57,11 +57,20 @@ export class Caret{
 			count--;
 		}
 	}
+	public static AddImage(url:string){
+		if(!this.isActive()) return;
+
+		this.NewLine();
+
+		this.Element().before(this.ImageView(url));
+
+		//this.NewLine();
+	}
 
 	public static NewLine(){
 		if(!this.isActive()) return;
 
-		if(this.Line().children('.char').length < 1) return;
+		if(this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
 
 		let line = this.Line();
 		let lineChildren = line.children();
@@ -112,10 +121,22 @@ export class Caret{
 
 		return line;
 	}
+	public static ImageView(url){
+		return $(`
+			<div class="img-wrap">
+				<span class="handle top-left"></span>
+				<span class="handle top-right"></span>
+				<img src="${url}"/>
+				<span class="handle bottom-left"></span>
+				<span class="handle bottom-right"></span>
+			</div>
+		`);
+	}
 
 	public static GetStyles(){
 		return {
-			'font-size' : $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val()
+			'font-size' : $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val(),
+			'font-family' : $('.headwyg-toolbar #font-family').val()
 		};
 	}
 }

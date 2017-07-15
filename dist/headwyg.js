@@ -94,9 +94,9 @@ var Caret = function () {
     };
     Caret.WriteChar = function (char) {
         if (!this.isActive()) return;
-        var caret = $("<span class=\"char\">" + char + "</span>");
-        caret.css(this.GetStyles());
-        this.Element().before(caret);
+        var element = $("<span class=\"char\">" + char + "</span>");
+        element.css(this.GetStyles());
+        this.Element().before(element);
     };
     Caret.Backspace = function (count) {
         if (!this.isActive()) return;
@@ -114,9 +114,15 @@ var Caret = function () {
             count--;
         }
     };
+    Caret.AddImage = function (url) {
+        if (!this.isActive()) return;
+        this.NewLine();
+        this.Element().before(this.ImageView(url));
+        //this.NewLine();
+    };
     Caret.NewLine = function () {
         if (!this.isActive()) return;
-        if (this.Line().children('.char').length < 1) return;
+        if (this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
         var line = this.Line();
         var lineChildren = line.children();
         var index = Caret.Element().index();
@@ -164,9 +170,13 @@ var Caret = function () {
         if (contents) line.html(contents);
         return line;
     };
+    Caret.ImageView = function (url) {
+        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<span class=\"handle top-left\"></span>\n\t\t\t\t<span class=\"handle top-right\"></span>\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-left\"></span>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
+    };
     Caret.GetStyles = function () {
         return {
-            'font-size': $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val()
+            'font-size': $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val(),
+            'font-family': $('.headwyg-toolbar #font-family').val()
         };
     };
     return Caret;
@@ -10070,28 +10080,29 @@ var $ = __webpack_require__(1);
 __webpack_require__(7);
 var MouseListener_ts_1 = __webpack_require__(8);
 var KeyboarderListener_ts_1 = __webpack_require__(9);
-var Toolbar_ts_1 = __webpack_require__(27);
-var OnRootClick_ts_1 = __webpack_require__(10);
-var OnClickOut_ts_1 = __webpack_require__(11);
-var OnCharClick_ts_1 = __webpack_require__(12);
-var HighlightHandler_ts_1 = __webpack_require__(13);
-var OnGeneral_ts_1 = __webpack_require__(14);
-var OnReturn_ts_1 = __webpack_require__(15);
-var OnBackspace_ts_1 = __webpack_require__(16);
-var OnLeft_ts_1 = __webpack_require__(17);
-var OnRight_ts_1 = __webpack_require__(18);
-var OnUp_ts_1 = __webpack_require__(19);
-var OnDown_ts_1 = __webpack_require__(20);
-var OnEnd_ts_1 = __webpack_require__(21);
-var OnHome_ts_1 = __webpack_require__(22);
-var OnPageUp_ts_1 = __webpack_require__(23);
-var OnPageDown_ts_1 = __webpack_require__(24);
-var OnTab_ts_1 = __webpack_require__(25);
+var Toolbar_ts_1 = __webpack_require__(10);
+var OnRootClick_ts_1 = __webpack_require__(11);
+var OnClickOut_ts_1 = __webpack_require__(12);
+var OnCharClick_ts_1 = __webpack_require__(13);
+var HighlightHandler_ts_1 = __webpack_require__(14);
+var OnGeneral_ts_1 = __webpack_require__(15);
+var OnReturn_ts_1 = __webpack_require__(16);
+var OnBackspace_ts_1 = __webpack_require__(17);
+var OnLeft_ts_1 = __webpack_require__(18);
+var OnRight_ts_1 = __webpack_require__(19);
+var OnUp_ts_1 = __webpack_require__(20);
+var OnDown_ts_1 = __webpack_require__(21);
+var OnEnd_ts_1 = __webpack_require__(22);
+var OnHome_ts_1 = __webpack_require__(23);
+var OnPageUp_ts_1 = __webpack_require__(24);
+var OnPageDown_ts_1 = __webpack_require__(25);
+var OnTab_ts_1 = __webpack_require__(26);
+var OnImageClick_ts_1 = __webpack_require__(27);
 var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
-        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler());
+        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler()).On('1', new OnImageClick_ts_1.OnImageClick());
         KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab());
         var toolbar = new Toolbar_ts_1.Toolbar();
     }
@@ -10241,6 +10252,104 @@ exports.KeyboardListener = KeyboardListener;
 "use strict";
 
 
+exports.__esModule = true;
+var $ = __webpack_require__(1);
+var Caret_ts_1 = __webpack_require__(0);
+var Toolbar = function () {
+    function Toolbar() {
+        $('.headwyg-editor').after(this.ToolBarView());
+    }
+    Toolbar.prototype.ToolBarView = function () {
+        var _this = this;
+        var toolbar = $("<div class=\"headwyg-toolbar\"></div>");
+        var fontSize = $('<select id="font-size" class="item"></select>');
+        [0.67, 0.83, 1, 1.17, 1.5, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20].forEach(function (size) {
+            return fontSize.append("<option value=\"" + size + "\">" + size + "</option>");
+        });
+        toolbar.append(fontSize);
+        $(fontSize).val(1);
+        $(fontSize).on('change', this.UpdateStyles);
+        var fontScale = $('<select id="font-scale" class="item"></select>');
+        ['pt', 'px', 'em', 'rem'].forEach(function (scale) {
+            return fontScale.append("<option value=\"" + scale + "\">" + scale + "</option>");
+        });
+        toolbar.append(fontScale);
+        $(fontScale).val('em');
+        $(fontScale).on('change', this.UpdateStyles);
+        var fontSelector = $('<select id="font-family" class="item"></select>');
+        this.ReadFonts().forEach(function (font) {
+            return fontSelector.append("<option value=\"'" + font.family + "'," + font.generic + "\">" + font.family + "</option>");
+        });
+        toolbar.append(fontSelector);
+        $(fontSelector).on('change', this.UpdateStyles);
+        var addImageInput = $('<input id="add-image-input" type="file" accept="image/*"/>').change(function (e) {
+            if (e.target.files.length > 0) {
+                _this.Base64Encode(e.target.files[0], function (result, error) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    Caret_ts_1.Caret.AddImage(result);
+                });
+            }
+        });
+        var addImageButton = $('<button class="item">Image</button>').click(function () {
+            return $(addImageInput).trigger('click');
+        });
+        $('.headwyg-toolbar').append(addImageInput);
+        toolbar.append(addImageButton);
+        return toolbar;
+    };
+    Toolbar.prototype.UpdateStyles = function () {
+        $('.char.selected').css(Caret_ts_1.Caret.GetStyles());
+        $('.caret').css(Caret_ts_1.Caret.GetStyles());
+    };
+    Toolbar.prototype.UnpackStyles = function (element) {
+        var styles = $(element).attr('style').split(';');
+        return styles.reduce(function (obj, current) {
+            var parts = current.split(':').map(function (part) {
+                return part.trim();
+            });
+            obj[parts[0]] = parts[1];
+            return obj;
+        }, {});
+    };
+    Toolbar.prototype.ReadFonts = function () {
+        var fonts = [];
+        $('[headwyg-fonts]').each(function (index, element) {
+            $(element).attr('headwyg-fonts').split(',').reduce(function (processed, font) {
+                var matches = font.match('([^:]+):(.*)');
+                var familyIndex = 1,
+                    genericIndex = 2;
+                if (matches) processed.push({ family: matches[familyIndex], generic: matches[genericIndex] });
+                return processed;
+            }, []).forEach(function (font) {
+                return fonts.push(font);
+            });
+        });
+        return fonts;
+    };
+    Toolbar.prototype.Base64Encode = function (file, callback) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            callback(reader.result);
+        };
+        reader.onerror = function (error) {
+            callback(undefined, error);
+        };
+    };
+    return Toolbar;
+}();
+exports.Toolbar = Toolbar;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var __extends = undefined && undefined.__extends || function () {
     var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
         d.__proto__ = b;
@@ -10278,7 +10387,7 @@ var OnRootClick = function (_super) {
 exports.OnRootClick = OnRootClick;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10321,7 +10430,7 @@ var OnClickOut = function (_super) {
 exports.OnClickOut = OnClickOut;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10364,7 +10473,7 @@ var OnCharClick = function (_super) {
 exports.OnCharClick = OnCharClick;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10399,15 +10508,14 @@ var HighlightHandler = function (_super) {
     };
     HighlightHandler.prototype.onUp = function (e) {};
     HighlightHandler.prototype.onMove = function (e) {
-        if ($(e.target).hasClass('char')) '';
-        $(e.target).addClass('selected');
+        if ($(e.target).hasClass('char')) $(e.target).addClass('selected');
     };
     return HighlightHandler;
 }(MouseHandler_ts_1.MouseHandler);
 exports.HighlightHandler = HighlightHandler;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10458,7 +10566,7 @@ var OnGeneral = function (_super) {
 exports.OnGeneral = OnGeneral;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10496,7 +10604,7 @@ var OnReturn = function (_super) {
 exports.OnReturn = OnReturn;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10540,7 +10648,7 @@ var OnBackspace = function (_super) {
 exports.OnBackspace = OnBackspace;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10579,7 +10687,7 @@ var OnLeft = function (_super) {
 exports.OnLeft = OnLeft;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10618,7 +10726,7 @@ var OnRight = function (_super) {
 exports.OnRight = OnRight;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10669,7 +10777,7 @@ var OnUp = function (_super) {
 exports.OnUp = OnUp;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10720,7 +10828,7 @@ var OnDown = function (_super) {
 exports.OnDown = OnDown;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10758,7 +10866,7 @@ var OnEnd = function (_super) {
 exports.OnEnd = OnEnd;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10796,7 +10904,7 @@ var OnHome = function (_super) {
 exports.OnHome = OnHome;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10835,7 +10943,7 @@ var OnPageUp = function (_super) {
 exports.OnPageUp = OnPageUp;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10874,7 +10982,7 @@ var OnPageDown = function (_super) {
 exports.OnPageDown = OnPageDown;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10913,55 +11021,39 @@ var OnTab = function (_super) {
 exports.OnTab = OnTab;
 
 /***/ }),
-/* 26 */,
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
-var Toolbar = function () {
-    function Toolbar() {
-        $('.headwyg-editor').after(this.ToolBarView());
-    }
-    Toolbar.prototype.ToolBarView = function () {
-        var toolbar = $("<div class=\"headwyg-toolbar\"></div>");
-        var fontSize = $('<select id="font-size"></select>');
-        [0.67, 0.83, 1, 1.17, 1.5, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20].forEach(function (size) {
-            return fontSize.append("<option value=\"" + size + "\">" + size + "</option>");
-        });
-        toolbar.append(fontSize);
-        $(fontSize).val(1);
-        $(fontSize).on('change', this.UpdateStyles);
-        var fontScale = $('<select id="font-scale"></select>');
-        ['pt', 'px', 'em', 'rem'].forEach(function (scale) {
-            return fontScale.append("<option value=\"" + scale + "\">" + scale + "</option>");
-        });
-        toolbar.append(fontScale);
-        $(fontScale).val('em');
-        $(fontScale).on('change', this.UpdateStyles);
-        return toolbar;
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
     };
-    Toolbar.prototype.UpdateStyles = function () {
-        $('.char.selected').css(Caret_ts_1.Caret.GetStyles());
-        $('.caret').css(Caret_ts_1.Caret.GetStyles());
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    Toolbar.prototype.UnpackStyles = function (element) {
-        var styles = $(element).attr('style').split(';');
-        return styles.reduce(function (obj, current) {
-            var parts = current.split(':').map(function (part) {
-                return part.trim();
-            });
-            obj[parts[0]] = parts[1];
-            return obj;
-        }, {});
-    };
-    return Toolbar;
 }();
-exports.Toolbar = Toolbar;
+exports.__esModule = true;
+var MouseHandler_ts_1 = __webpack_require__(3);
+var OnImageClick = function (_super) {
+    __extends(OnImageClick, _super);
+    function OnImageClick() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnImageClick.prototype.onClick = function (e) {};
+    return OnImageClick;
+}(MouseHandler_ts_1.MouseHandler);
+exports.OnImageClick = OnImageClick;
 
 /***/ })
 /******/ ]);

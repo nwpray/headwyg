@@ -10,7 +10,7 @@ export class Toolbar{
 	ToolBarView(){
 		let toolbar = $(`<div class="headwyg-toolbar"></div>`);
 
-		let fontSize = $('<select id="font-size"></select>');
+		let fontSize = $('<select id="font-size" class="item"></select>');
 		[0.67, 0.83, 1, 1.17, 1.5, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 			.forEach((size) => fontSize.append(`<option value="${size}">${size}</option>`));
 		toolbar.append(fontSize);
@@ -18,13 +18,41 @@ export class Toolbar{
 
 		$(fontSize).on('change', this.UpdateStyles);
 
-		let fontScale = $('<select id="font-scale"></select>');
+		let fontScale = $('<select id="font-scale" class="item"></select>');
 		['pt', 'px', 'em', 'rem']
 			.forEach((scale) => fontScale.append(`<option value="${scale}">${scale}</option>`));
 		toolbar.append(fontScale);
 		$(fontScale).val('em');
 
 		$(fontScale).on('change', this.UpdateStyles);
+
+		let fontSelector = $('<select id="font-family" class="item"></select>');
+
+		this.ReadFonts().forEach((font) =>
+			fontSelector.append(`<option value="'${font.family}',${font.generic}">${font.family}</option>`));
+
+		toolbar.append(fontSelector);
+		$(fontSelector).on('change', this.UpdateStyles);
+
+		let addImageInput = $('<input id="add-image-input" type="file" accept="image/*"/>')
+			.change((e) => {
+				if(e.target.files.length > 0){
+					this.Base64Encode(e.target.files[0], (result, error) =>{
+						if(error){
+							console.log(error);
+							return;
+						}
+
+						Caret.AddImage(result);
+					});
+				}
+			});
+		let addImageButton = $('<button class="item">Image</button>')
+			.click(() => $(addImageInput).trigger('click'));
+
+		$('.headwyg-toolbar').append(addImageInput);
+		toolbar.append(addImageButton);
+
 
 		return toolbar;
 	}
@@ -39,5 +67,31 @@ export class Toolbar{
 			obj[parts[0]] = parts[1];
 			return obj;
 		}, {});
+	}
+	ReadFonts(){
+		let fonts = [];
+
+		$('[headwyg-fonts]').each((index, element) => {
+			$(element).attr('headwyg-fonts').split(',')
+				.reduce((processed, font) => {
+					let matches = font.match('([^:]+):(.*)');
+					let familyIndex = 1, genericIndex = 2;
+					if(matches) processed.push({family:matches[familyIndex],generic:matches[genericIndex]});
+					return processed;
+				}, [])
+				.forEach((font) => fonts.push(font));
+		});
+
+		return fonts;
+	}
+	Base64Encode(file, callback){
+		let reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = function () {
+			callback(reader.result);
+		};
+		reader.onerror = function (error) {
+			callback(undefined, error);
+		};
 	}
 }

@@ -22,6 +22,7 @@ import {OnHome} from "./KeyboardHandlers/OnHome.ts";
 import {OnPageUp} from "./KeyboardHandlers/OnPageUp.ts";
 import {OnPageDown} from "./KeyboardHandlers/OnPageDown.ts";
 import {OnTab} from "./KeyboardHandlers/OnTab.ts";
+import {OnImageClick} from "./MouseHandlers/OnImageClick.ts";
 
 export class Headwyg{
 	selector:string;
@@ -35,7 +36,8 @@ export class Headwyg{
 			.On('1', new OnRootClick())
 			.On('1', new OnClickOut())
 			.On('1', new OnCharClick())
-			.On('1', new HighlightHandler());
+			.On('1', new HighlightHandler())
+			.On('1', new OnImageClick());
 
 		KeyboardListener.Instance()
 			.On('^[ -~]$', new OnGeneral())

@@ -12,7 +12,7 @@ export class HighlightHandler extends MouseHandler{
 	onUp(e){
 	}
 	onMove(e){
-		if($(e.target).hasClass('char'))''
+		if($(e.target).hasClass('char'))
 			$(e.target).addClass('selected');
 	}
 }
