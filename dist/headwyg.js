@@ -105,9 +105,11 @@ var Caret = function () {
             if (prev.length < 1) {
                 var line = this.Line();
                 var prev_1 = line.prev('.line');
-                Caret.PlaceAfter(prev_1.children().last());
-                prev_1.append(line.children());
-                line.remove();
+                if (prev_1.children().length > 0) {
+                    Caret.PlaceAfter(prev_1.children().last());
+                    prev_1.append(line.children());
+                    line.remove();
+                }
                 return;
             }
             prev.remove();
@@ -117,8 +119,7 @@ var Caret = function () {
     Caret.AddImage = function (url) {
         if (!this.isActive()) return;
         this.NewLine();
-        this.Element().before(this.ImageView(url));
-        //this.NewLine();
+        this.Element().replaceWith(this.ImageView(url));
     };
     Caret.NewLine = function () {
         if (!this.isActive()) return;
@@ -171,7 +172,10 @@ var Caret = function () {
         return line;
     };
     Caret.ImageView = function (url) {
-        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<span class=\"handle top-left\"></span>\n\t\t\t\t<span class=\"handle top-right\"></span>\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-left\"></span>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
+        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
+    };
+    Caret.ClearSelected = function () {
+        $('.selected').removeClass('selected');
     };
     Caret.GetStyles = function () {
         return {
@@ -10098,12 +10102,14 @@ var OnPageUp_ts_1 = __webpack_require__(24);
 var OnPageDown_ts_1 = __webpack_require__(25);
 var OnTab_ts_1 = __webpack_require__(26);
 var OnImageClick_ts_1 = __webpack_require__(27);
+var OnDelete_ts_1 = __webpack_require__(29);
+var ImageResizeHandler_ts_1 = __webpack_require__(30);
 var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
-        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler()).On('1', new OnImageClick_ts_1.OnImageClick());
-        KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab());
+        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler()).On('1', new OnImageClick_ts_1.OnImageClick()).On('1', new ImageResizeHandler_ts_1.ImageResizeHandler());
+        KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab()).On('Delete', new OnDelete_ts_1.OnDelete());
         var toolbar = new Toolbar_ts_1.Toolbar();
     }
     return Headwyg;
@@ -10286,10 +10292,10 @@ var Toolbar = function () {
             if (e.target.files.length > 0) {
                 _this.Base64Encode(e.target.files[0], function (result, error) {
                     if (error) {
-                        console.log(error);
                         return;
                     }
                     Caret_ts_1.Caret.AddImage(result);
+                    $(e.target).val("");
                 });
             }
         });
@@ -10508,7 +10514,9 @@ var HighlightHandler = function (_super) {
     };
     HighlightHandler.prototype.onUp = function (e) {};
     HighlightHandler.prototype.onMove = function (e) {
-        if ($(e.target).hasClass('char')) $(e.target).addClass('selected');
+        if ($(e.target).hasClass('char')) {
+            $(e.target).addClass('selected');
+        }
     };
     return HighlightHandler;
 }(MouseHandler_ts_1.MouseHandler);
@@ -10638,7 +10646,7 @@ var OnBackspace = function (_super) {
     OnBackspace.prototype.onDown = function (e) {
         var selected = $('.char.selected');
         if (selected.length < 1) {
-            if (e.shiftKey) Caret_ts_1.Caret.Line().remove();else Caret_ts_1.Caret.Backspace(1);
+            Caret_ts_1.Caret.Backspace(1);
         } else {
             $(selected).remove();
         }
@@ -10897,6 +10905,9 @@ var OnHome = function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnHome.prototype.onDown = function (e) {
+        Caret_ts_1.Caret.ClearSelected();
+        var index = Caret_ts_1.Caret.Element().prev('.char').index();
+        Caret_ts_1.Caret.Line().find('.char').slice(0, index + 1).addClass('selected');
         Caret_ts_1.Caret.PlaceBefore(Caret_ts_1.Caret.Line().children('.char').first());
     };
     return OnHome;
@@ -11044,16 +11055,130 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
+var $ = __webpack_require__(1);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var OnImageClick = function (_super) {
     __extends(OnImageClick, _super);
     function OnImageClick() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OnImageClick.prototype.onClick = function (e) {};
+    OnImageClick.prototype.onClick = function (e) {
+        if ($(e.target).hasClass('handler')) {} else if ($(e.target).hasClass('img-wrap')) {
+            $(e.target).toggleClass("selected");
+        } else if ($(e.target).closest('.img-wrap').length > 0) {
+            $(e.target).closest('.img-wrap').toggleClass('selected');
+            e.stopPropagation();
+        }
+    };
     return OnImageClick;
 }(MouseHandler_ts_1.MouseHandler);
 exports.OnImageClick = OnImageClick;
+
+/***/ }),
+/* 28 */,
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(1);
+var Caret_ts_1 = __webpack_require__(0);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnDelete = function (_super) {
+    __extends(OnDelete, _super);
+    function OnDelete() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnDelete.prototype.onDown = function (e) {
+        if (Caret_ts_1.Caret.isActive() && e.shiftKey) Caret_ts_1.Caret.Line().remove();
+        var selected = $('.selected');
+        selected.each(function (i) {
+            if ($(selected[i]).hasClass('img-wrap')) {
+                $(selected[i]).closest('.line').remove();
+            }
+        });
+    };
+    return OnDelete;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnDelete = OnDelete;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(1);
+var MouseHandler_ts_1 = __webpack_require__(3);
+var ImageResizeHandler = function (_super) {
+    __extends(ImageResizeHandler, _super);
+    function ImageResizeHandler() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.selected = undefined;
+        return _this;
+    }
+    ImageResizeHandler.prototype.onDown = function (e) {
+        if ($(e.target).hasClass('handle')) {
+            this.selected = e.target;
+            this.pos = { x: e.pageX, y: e.pageY };
+        }
+    };
+    ImageResizeHandler.prototype.onUp = function (e) {
+        this.selected = undefined;
+    };
+    ImageResizeHandler.prototype.onMove = function (e) {
+        if (this.selected) {
+            var last = this.pos;
+            var current = { x: e.pageX, y: e.pageY };
+            var img = $(this.selected).closest('.img-wrap').find('img');
+            var width = $(img).width();
+            var height = $(img).height();
+            var ratio = height / width;
+            var newWidth = width - (last.x - current.x);
+            var newHeight = ratio * newWidth;
+            $(img).width(newWidth).height(newHeight);
+            this.pos = current;
+        }
+    };
+    return ImageResizeHandler;
+}(MouseHandler_ts_1.MouseHandler);
+exports.ImageResizeHandler = ImageResizeHandler;
 
 /***/ })
 /******/ ]);

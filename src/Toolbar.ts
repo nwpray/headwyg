@@ -39,11 +39,12 @@ export class Toolbar{
 				if(e.target.files.length > 0){
 					this.Base64Encode(e.target.files[0], (result, error) =>{
 						if(error){
-							console.log(error);
 							return;
 						}
 
 						Caret.AddImage(result);
+
+						$(e.target).val("");
 					});
 				}
 			});

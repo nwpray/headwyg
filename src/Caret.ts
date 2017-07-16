@@ -44,11 +44,13 @@ export class Caret{
 				let line = this.Line();
 				let prev = line.prev('.line');
 
-				Caret.PlaceAfter(prev.children().last());
+				if(prev.children().length > 0){
+					Caret.PlaceAfter(prev.children().last());
 
-				prev.append(line.children());
+					prev.append(line.children());
 
-				line.remove();
+					line.remove();
+				}
 
 				return;
 			}
@@ -62,9 +64,7 @@ export class Caret{
 
 		this.NewLine();
 
-		this.Element().before(this.ImageView(url));
-
-		//this.NewLine();
+		this.Element().replaceWith(this.ImageView(url));
 	}
 
 	public static NewLine(){
@@ -124,13 +124,14 @@ export class Caret{
 	public static ImageView(url){
 		return $(`
 			<div class="img-wrap">
-				<span class="handle top-left"></span>
-				<span class="handle top-right"></span>
 				<img src="${url}"/>
-				<span class="handle bottom-left"></span>
 				<span class="handle bottom-right"></span>
 			</div>
 		`);
+	}
+
+	public static ClearSelected(){
+		$('.selected').removeClass('selected');
 	}
 
 	public static GetStyles(){

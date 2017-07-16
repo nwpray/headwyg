@@ -23,6 +23,8 @@ import {OnPageUp} from "./KeyboardHandlers/OnPageUp.ts";
 import {OnPageDown} from "./KeyboardHandlers/OnPageDown.ts";
 import {OnTab} from "./KeyboardHandlers/OnTab.ts";
 import {OnImageClick} from "./MouseHandlers/OnImageClick.ts";
+import {OnDelete} from "./KeyboardHandlers/OnDelete.ts";
+import {ImageResizeHandler} from "./MouseHandlers/ImageResizeHandler.ts";
 
 export class Headwyg{
 	selector:string;
@@ -37,7 +39,8 @@ export class Headwyg{
 			.On('1', new OnClickOut())
 			.On('1', new OnCharClick())
 			.On('1', new HighlightHandler())
-			.On('1', new OnImageClick());
+			.On('1', new OnImageClick())
+			.On('1', new ImageResizeHandler());
 
 		KeyboardListener.Instance()
 			.On('^[ -~]$', new OnGeneral())
@@ -51,7 +54,8 @@ export class Headwyg{
 			.On('Home', new OnHome())
 			.On('PageUp', new OnPageUp())
 			.On('PageDown', new OnPageDown())
-			.On('Tab', new OnTab());
+			.On('Tab', new OnTab())
+			.On('Delete', new OnDelete());
 
 		let toolbar = new Toolbar();
 	}

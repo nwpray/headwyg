@@ -2,14 +2,16 @@
   display: block;
   width: auto;
   min-height: 50px;
-  padding: 0 10px;
+  padding: 0 10px 67px 10px;
   overflow: auto;
   max-width: 800px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  z-index: 90; }
 
 .headwyg-editor:empty {
   border: 1px dotted rgba(0, 0, 0, 0.2);
-  cursor: text; }
+  cursor: text;
+  padding-bottom: 0; }
 
 .headwyg-editor .caret {
   animation: caret-flash 1s infinite ease-in-out;
@@ -30,42 +32,38 @@
   position: relative;
   text-align: center;
   white-space: normal;
-  display: inline-block; }
+  display: inline-block;
+  z-index: 90; }
+
+.headwyg-editor .img-wrap.selected::after {
+  -webkit-box-shadow: inset 0px 0px 5px 3px #ffcc00;
+  -moz-box-shadow: inset 0px 0px 5px 3px #ffcc00;
+  box-shadow: inset 0px 0px 5px 3px #ffcc00;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  content: ""; }
 
 .headwyg-editor .img-wrap > img {
   margin-bottom: -4px; }
 
-.headwyg-editor .img-wrap > .handle {
-  background: rgba(0, 0, 0, 0.4);
+.headwyg-editor .img-wrap:hover > .handle {
+  background: rgba(0, 0, 0, 0.7);
   height: 10px;
   width: 10px;
   display: inline-block;
   position: absolute;
-  z-index: 110; }
+  z-index: 110;
+  border: 1px solid white; }
 
-.headwyg-editor .img-wrap > .handle.top-left:hover,
-.headwyg-editor .img-wrap > .handle.bottom-right:hover {
+.headwyg-editor .img-wrap:hover > .handle.bottom-right {
+  right: 0;
+  bottom: 0;
   cursor: se-resize; }
-
-.headwyg-editor .img-wrap > .handle.top-right:hover,
-.headwyg-editor .img-wrap > .handle.bottom-left:hover {
-  cursor: sw-resize; }
-
-.headwyg-editor .img-wrap > .handle.top-left {
-  left: 0;
-  top: 0; }
-
-.headwyg-editor .img-wrap > .handle.top-right {
-  right: 0;
-  top: 0; }
-
-.headwyg-editor .img-wrap > .handle.bottom-left {
-  left: 0;
-  bottom: 0; }
-
-.headwyg-editor .img-wrap > .handle.bottom-right {
-  right: 0;
-  bottom: 0; }
 
 .headwyg-toolbar {
   position: fixed;
@@ -73,11 +71,12 @@
   right: 0;
   left: 0;
   width: auto;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 12px; }
+  background: black;
+  padding: 12px;
+  z-index: 100; }
 
 .headwyg-toolbar .item {
-  background: rgba(255, 255, 255, 0.2);
+  background: white;
   border: 1px solid rgba(0, 0, 0, 0.6);
   padding: 5px 15px;
   line-height: 12px;
