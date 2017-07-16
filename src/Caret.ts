@@ -137,7 +137,10 @@ export class Caret{
 	public static GetStyles(){
 		return {
 			'font-size' : $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val(),
-			'font-family' : $('.headwyg-toolbar #font-family').val()
+			'font-family' : $('.headwyg-toolbar #font-family').val(),
+			'font-weight' : $('#bold').hasClass('on') ? 'bold' : 'normal',
+			'font-style' : $('#italic').hasClass('on') ? 'italic' : 'normal',
+			'text-decoration' : $('#underline').hasClass('on') ? 'underline' : 'none'
 		};
 	}
 }

@@ -54,6 +54,26 @@ export class Toolbar{
 		$('.headwyg-toolbar').append(addImageInput);
 		toolbar.append(addImageButton);
 
+		let bold = $('<button id="bold" class="decoration item"><strong>B</strong></button>');
+		$(bold).click(() => {
+			$(bold).toggleClass('on');
+			this.UpdateStyles();
+		});
+		toolbar.append(bold);
+
+		let italic = $('<button id="italic" class="decoration item"><em>I</em></button>');
+		$(italic).click(() => {
+			$(italic).toggleClass('on');
+			this.UpdateStyles();
+		});
+		toolbar.append(italic);
+
+		let underline = $('<button id="underline" class="decoration item"><u>U</u></button>');
+		$(underline).click(() => {
+			$(underline).toggleClass('on');
+			this.UpdateStyles();
+		});
+		toolbar.append(underline);
 
 		return toolbar;
 	}

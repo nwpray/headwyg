@@ -68,130 +68,6 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret = function () {
-    function Caret() {}
-    Caret.isActive = function () {
-        return this.Element().length > 0;
-    };
-    Caret.Element = function () {
-        return $('.caret');
-    };
-    Caret.Line = function () {
-        return this.Element().closest('.line');
-    };
-    Caret.Deactivate = function () {
-        if (!this.isActive()) return;
-        //Get the current line
-        var line = this.Line();
-        //Remove the caret
-        this.Element().remove();
-        //If the line was empty remove the line as well
-        if (line.children('span').length < 1) line.remove();
-    };
-    Caret.WriteChar = function (char) {
-        if (!this.isActive()) return;
-        var element = $("<span class=\"char\">" + char + "</span>");
-        element.css(this.GetStyles());
-        this.Element().before(element);
-    };
-    Caret.Backspace = function (count) {
-        if (!this.isActive()) return;
-        while (count > 0) {
-            var prev = this.Element().prev('.char');
-            if (prev.length < 1) {
-                var line = this.Line();
-                var prev_1 = line.prev('.line');
-                if (prev_1.children().length > 0) {
-                    Caret.PlaceAfter(prev_1.children().last());
-                    prev_1.append(line.children());
-                    line.remove();
-                }
-                return;
-            }
-            prev.remove();
-            count--;
-        }
-    };
-    Caret.AddImage = function (url) {
-        if (!this.isActive()) return;
-        this.NewLine();
-        this.Element().replaceWith(this.ImageView(url));
-    };
-    Caret.NewLine = function () {
-        if (!this.isActive()) return;
-        if (this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
-        var line = this.Line();
-        var lineChildren = line.children();
-        var index = Caret.Element().index();
-        this.Deactivate();
-        var newLine = $(this.LineView(this.CaretView()));
-        line.html(lineChildren.slice(0, index));
-        newLine.html(lineChildren.slice(index));
-        line.after(newLine);
-    };
-    Caret.PlaceBefore = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).before(this.CaretView());
-    };
-    Caret.PlaceAfter = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).after(this.CaretView());
-    };
-    Caret.PlaceWithin = function (element, multiselect) {
-        if (multiselect === void 0) {
-            multiselect = false;
-        }
-        if (!multiselect) this.Deactivate();
-        $(element).prepend(this.CaretView());
-    };
-    Caret.CaretView = function (contents) {
-        if (contents === void 0) {
-            contents = undefined;
-        }
-        var caret = $('<span class="caret"></span>');
-        caret.css(this.GetStyles());
-        if (contents) caret.html(contents);
-        return caret;
-    };
-    Caret.LineView = function (contents) {
-        if (contents === void 0) {
-            contents = undefined;
-        }
-        var line = $('<p class="line"></p>');
-        if (contents) line.html(contents);
-        return line;
-    };
-    Caret.ImageView = function (url) {
-        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
-    };
-    Caret.ClearSelected = function () {
-        $('.selected').removeClass('selected');
-    };
-    Caret.GetStyles = function () {
-        return {
-            'font-size': $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val(),
-            'font-family': $('.headwyg-toolbar #font-family').val()
-        };
-    };
-    return Caret;
-}();
-exports.Caret = Caret;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 /* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -10024,6 +9900,133 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret = function () {
+    function Caret() {}
+    Caret.isActive = function () {
+        return this.Element().length > 0;
+    };
+    Caret.Element = function () {
+        return $('.caret');
+    };
+    Caret.Line = function () {
+        return this.Element().closest('.line');
+    };
+    Caret.Deactivate = function () {
+        if (!this.isActive()) return;
+        //Get the current line
+        var line = this.Line();
+        //Remove the caret
+        this.Element().remove();
+        //If the line was empty remove the line as well
+        if (line.children('span').length < 1) line.remove();
+    };
+    Caret.WriteChar = function (char) {
+        if (!this.isActive()) return;
+        var element = $("<span class=\"char\">" + char + "</span>");
+        element.css(this.GetStyles());
+        this.Element().before(element);
+    };
+    Caret.Backspace = function (count) {
+        if (!this.isActive()) return;
+        while (count > 0) {
+            var prev = this.Element().prev('.char');
+            if (prev.length < 1) {
+                var line = this.Line();
+                var prev_1 = line.prev('.line');
+                if (prev_1.children().length > 0) {
+                    Caret.PlaceAfter(prev_1.children().last());
+                    prev_1.append(line.children());
+                    line.remove();
+                }
+                return;
+            }
+            prev.remove();
+            count--;
+        }
+    };
+    Caret.AddImage = function (url) {
+        if (!this.isActive()) return;
+        this.NewLine();
+        this.Element().replaceWith(this.ImageView(url));
+    };
+    Caret.NewLine = function () {
+        if (!this.isActive()) return;
+        if (this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
+        var line = this.Line();
+        var lineChildren = line.children();
+        var index = Caret.Element().index();
+        this.Deactivate();
+        var newLine = $(this.LineView(this.CaretView()));
+        line.html(lineChildren.slice(0, index));
+        newLine.html(lineChildren.slice(index));
+        line.after(newLine);
+    };
+    Caret.PlaceBefore = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).before(this.CaretView());
+    };
+    Caret.PlaceAfter = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).after(this.CaretView());
+    };
+    Caret.PlaceWithin = function (element, multiselect) {
+        if (multiselect === void 0) {
+            multiselect = false;
+        }
+        if (!multiselect) this.Deactivate();
+        $(element).prepend(this.CaretView());
+    };
+    Caret.CaretView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var caret = $('<span class="caret"></span>');
+        caret.css(this.GetStyles());
+        if (contents) caret.html(contents);
+        return caret;
+    };
+    Caret.LineView = function (contents) {
+        if (contents === void 0) {
+            contents = undefined;
+        }
+        var line = $('<p class="line"></p>');
+        if (contents) line.html(contents);
+        return line;
+    };
+    Caret.ImageView = function (url) {
+        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
+    };
+    Caret.ClearSelected = function () {
+        $('.selected').removeClass('selected');
+    };
+    Caret.GetStyles = function () {
+        return {
+            'font-size': $('.headwyg-toolbar #font-size').val() + $('.headwyg-toolbar #font-scale').val(),
+            'font-family': $('.headwyg-toolbar #font-family').val(),
+            'font-weight': $('#bold').hasClass('on') ? 'bold' : 'normal',
+            'font-style': $('#italic').hasClass('on') ? 'italic' : 'normal',
+            'text-decoration': $('#underline').hasClass('on') ? 'underline' : 'none'
+        };
+    };
+    return Caret;
+}();
+exports.Caret = Caret;
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10080,7 +10083,7 @@ var headwyg = new _Headwyg.Headwyg('headwyg');
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 __webpack_require__(7);
 var MouseListener_ts_1 = __webpack_require__(8);
 var KeyboarderListener_ts_1 = __webpack_require__(9);
@@ -10102,8 +10105,8 @@ var OnPageUp_ts_1 = __webpack_require__(24);
 var OnPageDown_ts_1 = __webpack_require__(25);
 var OnTab_ts_1 = __webpack_require__(26);
 var OnImageClick_ts_1 = __webpack_require__(27);
-var OnDelete_ts_1 = __webpack_require__(29);
-var ImageResizeHandler_ts_1 = __webpack_require__(30);
+var OnDelete_ts_1 = __webpack_require__(28);
+var ImageResizeHandler_ts_1 = __webpack_require__(29);
 var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
@@ -10160,7 +10163,7 @@ module.exports = function (module) {
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseListener = function () {
     function MouseListener() {
         this.events = {};
@@ -10215,7 +10218,7 @@ exports.MouseListener = MouseListener;
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var KeyboardListener = function () {
     function KeyboardListener() {
         this.events = {};
@@ -10259,8 +10262,8 @@ exports.KeyboardListener = KeyboardListener;
 
 
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var Toolbar = function () {
     function Toolbar() {
         $('.headwyg-editor').after(this.ToolBarView());
@@ -10304,6 +10307,24 @@ var Toolbar = function () {
         });
         $('.headwyg-toolbar').append(addImageInput);
         toolbar.append(addImageButton);
+        var bold = $('<button id="bold" class="decoration item"><strong>B</strong></button>');
+        $(bold).click(function () {
+            $(bold).toggleClass('on');
+            _this.UpdateStyles();
+        });
+        toolbar.append(bold);
+        var italic = $('<button id="italic" class="decoration item"><em>I</em></button>');
+        $(italic).click(function () {
+            $(italic).toggleClass('on');
+            _this.UpdateStyles();
+        });
+        toolbar.append(italic);
+        var underline = $('<button id="underline" class="decoration item"><u>U</u></button>');
+        $(underline).click(function () {
+            $(underline).toggleClass('on');
+            _this.UpdateStyles();
+        });
+        toolbar.append(underline);
         return toolbar;
     };
     Toolbar.prototype.UpdateStyles = function () {
@@ -10373,8 +10394,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var OnRootClick = function (_super) {
     __extends(OnRootClick, _super);
@@ -10416,9 +10437,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var OnClickOut = function (_super) {
     __extends(OnClickOut, _super);
     function OnClickOut() {
@@ -10459,9 +10480,9 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var OnCharClick = function (_super) {
     __extends(OnCharClick, _super);
     function OnCharClick() {
@@ -10502,7 +10523,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var HighlightHandler = function (_super) {
     __extends(HighlightHandler, _super);
@@ -10546,8 +10567,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnGeneral = function (_super) {
     __extends(OnGeneral, _super);
@@ -10597,7 +10618,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnReturn = function (_super) {
     __extends(OnReturn, _super);
@@ -10635,8 +10656,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnBackspace = function (_super) {
     __extends(OnBackspace, _super);
@@ -10679,7 +10700,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnLeft = function (_super) {
     __extends(OnLeft, _super);
@@ -10718,7 +10739,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnRight = function (_super) {
     __extends(OnRight, _super);
@@ -10757,8 +10778,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnUp = function (_super) {
     __extends(OnUp, _super);
@@ -10808,8 +10829,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnDown = function (_super) {
     __extends(OnDown, _super);
@@ -10859,7 +10880,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnEnd = function (_super) {
     __extends(OnEnd, _super);
@@ -10897,7 +10918,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnHome = function (_super) {
     __extends(OnHome, _super);
@@ -10938,8 +10959,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnPageUp = function (_super) {
     __extends(OnPageUp, _super);
@@ -10977,8 +10998,8 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnPageDown = function (_super) {
     __extends(OnPageDown, _super);
@@ -11016,7 +11037,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var Caret_ts_1 = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
 var OnTab = function (_super) {
     __extends(OnTab, _super);
@@ -11055,7 +11076,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var OnImageClick = function (_super) {
     __extends(OnImageClick, _super);
@@ -11075,7 +11096,51 @@ var OnImageClick = function (_super) {
 exports.OnImageClick = OnImageClick;
 
 /***/ }),
-/* 28 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __extends = undefined && undefined.__extends || function () {
+    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+    } || function (d, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+        }
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+exports.__esModule = true;
+var $ = __webpack_require__(0);
+var Caret_ts_1 = __webpack_require__(1);
+var KeyboardHandler_ts_1 = __webpack_require__(2);
+var OnDelete = function (_super) {
+    __extends(OnDelete, _super);
+    function OnDelete() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    OnDelete.prototype.onDown = function (e) {
+        if (Caret_ts_1.Caret.isActive() && e.shiftKey) Caret_ts_1.Caret.Line().remove();
+        var selected = $('.selected');
+        selected.each(function (i) {
+            if ($(selected[i]).hasClass('img-wrap')) {
+                $(selected[i]).closest('.line').remove();
+            }
+        });
+    };
+    return OnDelete;
+}(KeyboardHandler_ts_1.KeyboardHandler);
+exports.OnDelete = OnDelete;
+
+/***/ }),
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11099,52 +11164,7 @@ var __extends = undefined && undefined.__extends || function () {
     };
 }();
 exports.__esModule = true;
-var $ = __webpack_require__(1);
-var Caret_ts_1 = __webpack_require__(0);
-var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnDelete = function (_super) {
-    __extends(OnDelete, _super);
-    function OnDelete() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    OnDelete.prototype.onDown = function (e) {
-        if (Caret_ts_1.Caret.isActive() && e.shiftKey) Caret_ts_1.Caret.Line().remove();
-        var selected = $('.selected');
-        selected.each(function (i) {
-            if ($(selected[i]).hasClass('img-wrap')) {
-                $(selected[i]).closest('.line').remove();
-            }
-        });
-    };
-    return OnDelete;
-}(KeyboardHandler_ts_1.KeyboardHandler);
-exports.OnDelete = OnDelete;
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var __extends = undefined && undefined.__extends || function () {
-    var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
-        d.__proto__ = b;
-    } || function (d, b) {
-        for (var p in b) {
-            if (b.hasOwnProperty(p)) d[p] = b[p];
-        }
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() {
-            this.constructor = d;
-        }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-}();
-exports.__esModule = true;
-var $ = __webpack_require__(1);
+var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var ImageResizeHandler = function (_super) {
     __extends(ImageResizeHandler, _super);

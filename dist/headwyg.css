@@ -82,13 +82,18 @@
   line-height: 12px;
   font-size: 12px;
   border-radius: 2px;
-  margin-right: 5px; }
+  margin-right: 5px;
+  cursor: pointer; }
 
 .headwyg-toolbar select.item {
   padding: 5px 5px 5px 15px; }
 
 .headwyg-toolbar button.item {
   line-height: 16px; }
+
+.headwyg-toolbar .item.decoration.on {
+  background: rgba(255, 255, 255, 0.5);
+  color: white; }
 
 .headwyg-toolbar #add-image-input {
   display: none; }
