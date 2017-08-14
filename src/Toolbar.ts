@@ -75,6 +75,27 @@ export class Toolbar{
 		});
 		toolbar.append(underline);
 
+		let leftAlign = $('<button id="left-align" class="item">L</button>');
+		$(leftAlign.click(() => {
+			Caret.Line().css({textAlign: 'left'});
+			$('.selected').closest('.line').css({textAlign: 'left'});
+		}));
+		toolbar.append(leftAlign);
+
+		let centerAlign = $('<button id="center-align" class="item">C</button>');
+		$(centerAlign.click(() => {
+			Caret.Line().css({textAlign: 'center'});
+			$('.selected').closest('.line').css({textAlign: 'center'});
+		}));
+		toolbar.append(centerAlign);
+
+		let rightAlign = $('<button id="right-align" class="item">R</button>');
+		$(rightAlign.click(() => {
+			Caret.Line().css({textAlign: 'right'});
+			$('.selected').closest('.line').css({textAlign: 'right'});
+		}));
+		toolbar.append(rightAlign);
+
 		return toolbar;
 	}
 	UpdateStyles(){

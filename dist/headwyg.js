@@ -9958,6 +9958,10 @@ var Caret = function () {
         this.Element().replaceWith(this.ImageView(url));
     };
     Caret.NewLine = function () {
+        var selected = $('.selected');
+        if (selected.find('img').length > 0) {
+            selected.removeClass('selected').closest('.line').after($(this.LineView(this.CaretView())));
+        }
         if (!this.isActive()) return;
         if (this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
         var line = this.Line();
@@ -10003,12 +10007,12 @@ var Caret = function () {
         if (contents === void 0) {
             contents = undefined;
         }
-        var line = $('<p class="line"></p>');
+        var line = $('<p class="line" style="max-width: 100%;"></p>');
         if (contents) line.html(contents);
         return line;
     };
     Caret.ImageView = function (url) {
-        return $("\n\t\t\t<div class=\"img-wrap\">\n\t\t\t\t<img src=\"" + url + "\"/>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
+        return $("\n\t\t\t<div class=\"img-wrap\" style=\"max-width: 100%\">\n\t\t\t\t<img src=\"" + url + "\" style=\"max-width: 100%\"/>\n\t\t\t\t<span class=\"handle bottom-right\"></span>\n\t\t\t</div>\n\t\t");
     };
     Caret.ClearSelected = function () {
         $('.selected').removeClass('selected');
@@ -10111,7 +10115,7 @@ var Headwyg = function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
-        MouseListener_ts_1.MouseListener.Instance().On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler()).On('1', new OnImageClick_ts_1.OnImageClick()).On('1', new ImageResizeHandler_ts_1.ImageResizeHandler());
+        MouseListener_ts_1.MouseListener.Instance().On('1', new OnClickOut_ts_1.OnClickOut()).On('1', new OnRootClick_ts_1.OnRootClick()).On('1', new OnCharClick_ts_1.OnCharClick()).On('1', new HighlightHandler_ts_1.HighlightHandler()).On('1', new OnImageClick_ts_1.OnImageClick()).On('1', new ImageResizeHandler_ts_1.ImageResizeHandler());
         KeyboarderListener_ts_1.KeyboardListener.Instance().On('^[ -~]$', new OnGeneral_ts_1.OnGeneral()).On('Enter', new OnReturn_ts_1.OnReturn()).On('Backspace', new OnBackspace_ts_1.OnBackspace()).On('ArrowLeft', new OnLeft_ts_1.OnLeft()).On('ArrowRight', new OnRight_ts_1.OnRight()).On('ArrowDown', new OnDown_ts_1.OnDown()).On('ArrowUp', new OnUp_ts_1.OnUp()).On('End', new OnEnd_ts_1.OnEnd()).On('Home', new OnHome_ts_1.OnHome()).On('PageUp', new OnPageUp_ts_1.OnPageUp()).On('PageDown', new OnPageDown_ts_1.OnPageDown()).On('Tab', new OnTab_ts_1.OnTab()).On('Delete', new OnDelete_ts_1.OnDelete());
         var toolbar = new Toolbar_ts_1.Toolbar();
     }
@@ -10325,6 +10329,24 @@ var Toolbar = function () {
             _this.UpdateStyles();
         });
         toolbar.append(underline);
+        var leftAlign = $('<button id="left-align" class="item">L</button>');
+        $(leftAlign.click(function () {
+            Caret_ts_1.Caret.Line().css({ textAlign: 'left' });
+            $('.selected').closest('.line').css({ textAlign: 'left' });
+        }));
+        toolbar.append(leftAlign);
+        var centerAlign = $('<button id="center-align" class="item">C</button>');
+        $(centerAlign.click(function () {
+            Caret_ts_1.Caret.Line().css({ textAlign: 'center' });
+            $('.selected').closest('.line').css({ textAlign: 'center' });
+        }));
+        toolbar.append(centerAlign);
+        var rightAlign = $('<button id="right-align" class="item">R</button>');
+        $(rightAlign.click(function () {
+            Caret_ts_1.Caret.Line().css({ textAlign: 'right' });
+            $('.selected').closest('.line').css({ textAlign: 'right' });
+        }));
+        toolbar.append(rightAlign);
         return toolbar;
     };
     Toolbar.prototype.UpdateStyles = function () {
@@ -10404,6 +10426,7 @@ var OnRootClick = function (_super) {
     }
     OnRootClick.prototype.onClick = function (e) {
         if ($(e.target).hasClass('headwyg-editor')) {
+            console.log("Working");
             if ($(e.target).html().trim() === "") {
                 $(e.target).append(Caret_ts_1.Caret.LineView(Caret_ts_1.Caret.CaretView()));
             }
@@ -10446,11 +10469,12 @@ var OnClickOut = function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnClickOut.prototype.onClick = function (e) {
+        if ($(e.target).closest('.headwyg-toolbar').length < 1) Caret_ts_1.Caret.Deactivate();
         //If the caret is not active, shortcut out
-        if (!Caret_ts_1.Caret.isActive()) return;
-        if ($(e.target).closest('.headwyg-editor').length < 1 && $(e.target).closest('.headwyg-toolbar').length < 1) {
-            Caret_ts_1.Caret.Deactivate();
-        }
+        /*if(!Caret.isActive()) return;
+          if($(e.target).closest('.headwyg-editor').length < 1 && $(e.target).closest('.headwyg-toolbar').length < 1){
+            Caret.Deactivate();
+        }*/
     };
     return OnClickOut;
 }(MouseHandler_ts_1.MouseHandler);
@@ -10525,19 +10549,34 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
+var Caret_ts_1 = __webpack_require__(1);
 var HighlightHandler = function (_super) {
     __extends(HighlightHandler, _super);
     function HighlightHandler() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     HighlightHandler.prototype.onDown = function (e) {
-        if (!e.shiftKey && $(e.target).closest('.headwyg-toolbar').length < 1) $('.selected').removeClass('selected');
+        if (!e.shiftKey && $(e.target).closest('.headwyg-toolbar').length < 1) {
+            HighlightHandler.last = null;
+            $('.selected').removeClass('selected');
+        }
     };
     HighlightHandler.prototype.onUp = function (e) {};
     HighlightHandler.prototype.onMove = function (e) {
-        if ($(e.target).hasClass('char')) {
-            $(e.target).addClass('selected');
+        if (!$(e.target).hasClass('char')) return;
+        $(e.target).addClass('selected');
+        if ($(HighlightHandler.last).closest('.line')[0] == $(e.target).closest('.line')[0]) {
+            var lastIndex = $(HighlightHandler.last).index();
+            var targetIndex = $(e.target).index();
+            var high = lastIndex > targetIndex ? lastIndex : targetIndex;
+            var low = lastIndex < targetIndex ? lastIndex : targetIndex;
+            var siblings = $(e.target).closest('.line').find('.char');
+            for (var i = low; i < high; i++) {
+                $(siblings[i]).addClass('selected');
+            }
+            if (targetIndex > lastIndex) Caret_ts_1.Caret.PlaceAfter(e.target);else if (targetIndex < lastIndex) Caret_ts_1.Caret.PlaceBefore(e.target);
         }
+        HighlightHandler.last = e.target;
     };
     return HighlightHandler;
 }(MouseHandler_ts_1.MouseHandler);
@@ -10666,10 +10705,10 @@ var OnBackspace = function (_super) {
     }
     OnBackspace.prototype.onDown = function (e) {
         var selected = $('.char.selected');
-        if (selected.length < 1) {
-            Caret_ts_1.Caret.Backspace(1);
-        } else {
+        if (selected.length < 1) Caret_ts_1.Caret.Backspace(1);else {
+            var parent_1 = $(selected).closest('.line');
             $(selected).remove();
+            if ($(parent_1).html() === '') parent_1.html(Caret_ts_1.Caret.CaretView());
         }
     };
     return OnBackspace;

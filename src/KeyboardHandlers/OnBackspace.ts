@@ -7,11 +7,14 @@ import {KeyboardHandler} from "../KeyboardHandler.ts";
 export class OnBackspace extends KeyboardHandler{
 	onDown(e){
 		let selected = $('.char.selected');
-		if(selected.length < 1){
+
+		if(selected.length < 1)
 			Caret.Backspace(1);
-		}
-		else{
+		else {
+			let parent = $(selected).closest('.line');
 			$(selected).remove();
+			if($(parent).html() === '')
+				parent.html(Caret.CaretView());
 		}
 	}
 }

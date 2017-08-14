@@ -35,8 +35,8 @@ export class Headwyg{
 		$(this.selector).addClass('headwyg-editor');
 
 		MouseListener.Instance()
-			.On('1', new OnRootClick())
 			.On('1', new OnClickOut())
+			.On('1', new OnRootClick())
 			.On('1', new OnCharClick())
 			.On('1', new HighlightHandler())
 			.On('1', new OnImageClick())

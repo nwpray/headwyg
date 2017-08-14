@@ -68,6 +68,13 @@ export class Caret{
 	}
 
 	public static NewLine(){
+		let selected = $('.selected');
+		if(selected.find('img').length > 0){
+			selected
+				.removeClass('selected')
+				.closest('.line').after($(this.LineView(this.CaretView())));
+		}
+
 		if(!this.isActive()) return;
 
 		if(this.Line().children('.char').length < 1 && this.Line().children('img').length < 1) return;
@@ -114,7 +121,7 @@ export class Caret{
 		return caret;
 	}
 	public static LineView(contents = undefined){
-		let line = $('<p class="line"></p>');
+		let line = $('<p class="line" style="max-width: 100%;"></p>');
 
 		if(contents)
 			line.html(contents);
@@ -123,8 +130,8 @@ export class Caret{
 	}
 	public static ImageView(url){
 		return $(`
-			<div class="img-wrap">
-				<img src="${url}"/>
+			<div class="img-wrap" style="max-width: 100%">
+				<img src="${url}" style="max-width: 100%"/>
 				<span class="handle bottom-right"></span>
 			</div>
 		`);

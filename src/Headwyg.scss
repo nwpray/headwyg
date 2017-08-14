@@ -3,7 +3,6 @@
   width: auto;
   min-height: 50px;
   padding: 0 10px 67px 10px;
-  overflow: auto;
   max-width: 800px;
   margin: 0 auto;
   z-index: 90;
@@ -18,13 +17,16 @@
   cursor: text;
 }
 .headwyg-editor .line{
-  white-space: pre;
+  white-space: pre-wrap;
+  max-width: 100%;
 }
 
 .headwyg-editor .char{
   user-select:none;
   cursor: text;
+  display:inline-block;
 }
+
 .headwyg-editor .char.selected{
   background: rgba(0,0,0,0.5) !important;
   color: white !important;
