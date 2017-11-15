@@ -9908,7 +9908,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.__esModule = true;
 var $ = __webpack_require__(0);
-var Caret = function () {
+var Caret = /** @class */function () {
     function Caret() {}
     Caret.isActive = function () {
         return this.Element().length > 0;
@@ -10038,7 +10038,7 @@ exports.Caret = Caret;
 
 
 exports.__esModule = true;
-var KeyboardHandler = function () {
+var KeyboardHandler = /** @class */function () {
     function KeyboardHandler() {}
     KeyboardHandler.prototype.onUp = function (e) {};
     KeyboardHandler.prototype.onDown = function (e) {};
@@ -10055,7 +10055,7 @@ exports.KeyboardHandler = KeyboardHandler;
 
 
 exports.__esModule = true;
-var MouseHandler = function () {
+var MouseHandler = /** @class */function () {
     function MouseHandler() {}
     MouseHandler.prototype.onClick = function (e) {};
     ;
@@ -10111,7 +10111,7 @@ var OnTab_ts_1 = __webpack_require__(26);
 var OnImageClick_ts_1 = __webpack_require__(27);
 var OnDelete_ts_1 = __webpack_require__(28);
 var ImageResizeHandler_ts_1 = __webpack_require__(29);
-var Headwyg = function () {
+var Headwyg = /** @class */function () {
     function Headwyg(selector) {
         this.selector = selector;
         $(this.selector).addClass('headwyg-editor');
@@ -10168,7 +10168,7 @@ module.exports = function (module) {
 
 exports.__esModule = true;
 var $ = __webpack_require__(0);
-var MouseListener = function () {
+var MouseListener = /** @class */function () {
     function MouseListener() {
         this.events = {};
         $(window).on('click', this._onWindowClick.bind(this)).on('mousedown', this._onMouseDown.bind(this)).on('mouseup', this._onMouseUp.bind(this)).on('mousemove', this._onMouseMove.bind(this));
@@ -10223,7 +10223,7 @@ exports.MouseListener = MouseListener;
 
 exports.__esModule = true;
 var $ = __webpack_require__(0);
-var KeyboardListener = function () {
+var KeyboardListener = /** @class */function () {
     function KeyboardListener() {
         this.events = {};
         $(window).keydown(this._onKeyDown.bind(this));
@@ -10268,7 +10268,7 @@ exports.KeyboardListener = KeyboardListener;
 exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
-var Toolbar = function () {
+var Toolbar = /** @class */function () {
     function Toolbar() {
         $('.headwyg-editor').after(this.ToolBarView());
     }
@@ -10419,14 +10419,13 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var OnRootClick = function (_super) {
+var OnRootClick = /** @class */function (_super) {
     __extends(OnRootClick, _super);
     function OnRootClick() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnRootClick.prototype.onClick = function (e) {
         if ($(e.target).hasClass('headwyg-editor')) {
-            console.log("Working");
             if ($(e.target).html().trim() === "") {
                 $(e.target).append(Caret_ts_1.Caret.LineView(Caret_ts_1.Caret.CaretView()));
             }
@@ -10463,7 +10462,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var Caret_ts_1 = __webpack_require__(1);
-var OnClickOut = function (_super) {
+var OnClickOut = /** @class */function (_super) {
     __extends(OnClickOut, _super);
     function OnClickOut() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10507,7 +10506,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var Caret_ts_1 = __webpack_require__(1);
-var OnCharClick = function (_super) {
+var OnCharClick = /** @class */function (_super) {
     __extends(OnCharClick, _super);
     function OnCharClick() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10550,7 +10549,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
 var Caret_ts_1 = __webpack_require__(1);
-var HighlightHandler = function (_super) {
+var HighlightHandler = /** @class */function (_super) {
     __extends(HighlightHandler, _super);
     function HighlightHandler() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10609,7 +10608,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnGeneral = function (_super) {
+var OnGeneral = /** @class */function (_super) {
     __extends(OnGeneral, _super);
     function OnGeneral() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10659,7 +10658,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnReturn = function (_super) {
+var OnReturn = /** @class */function (_super) {
     __extends(OnReturn, _super);
     function OnReturn() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10698,13 +10697,13 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnBackspace = function (_super) {
+var OnBackspace = /** @class */function (_super) {
     __extends(OnBackspace, _super);
     function OnBackspace() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OnBackspace.prototype.onDown = function (e) {
-        var selected = $('.char.selected');
+        var selected = $('.selected');
         if (selected.length < 1) Caret_ts_1.Caret.Backspace(1);else {
             var parent_1 = $(selected).closest('.line');
             $(selected).remove();
@@ -10741,7 +10740,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnLeft = function (_super) {
+var OnLeft = /** @class */function (_super) {
     __extends(OnLeft, _super);
     function OnLeft() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10780,7 +10779,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnRight = function (_super) {
+var OnRight = /** @class */function (_super) {
     __extends(OnRight, _super);
     function OnRight() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10820,7 +10819,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnUp = function (_super) {
+var OnUp = /** @class */function (_super) {
     __extends(OnUp, _super);
     function OnUp() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10871,7 +10870,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnDown = function (_super) {
+var OnDown = /** @class */function (_super) {
     __extends(OnDown, _super);
     function OnDown() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10921,7 +10920,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnEnd = function (_super) {
+var OnEnd = /** @class */function (_super) {
     __extends(OnEnd, _super);
     function OnEnd() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -10959,7 +10958,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnHome = function (_super) {
+var OnHome = /** @class */function (_super) {
     __extends(OnHome, _super);
     function OnHome() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11001,7 +11000,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnPageUp = function (_super) {
+var OnPageUp = /** @class */function (_super) {
     __extends(OnPageUp, _super);
     function OnPageUp() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11040,7 +11039,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnPageDown = function (_super) {
+var OnPageDown = /** @class */function (_super) {
     __extends(OnPageDown, _super);
     function OnPageDown() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11078,7 +11077,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnTab = function (_super) {
+var OnTab = /** @class */function (_super) {
     __extends(OnTab, _super);
     function OnTab() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11117,7 +11116,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var OnImageClick = function (_super) {
+var OnImageClick = /** @class */function (_super) {
     __extends(OnImageClick, _super);
     function OnImageClick() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11161,7 +11160,7 @@ exports.__esModule = true;
 var $ = __webpack_require__(0);
 var Caret_ts_1 = __webpack_require__(1);
 var KeyboardHandler_ts_1 = __webpack_require__(2);
-var OnDelete = function (_super) {
+var OnDelete = /** @class */function (_super) {
     __extends(OnDelete, _super);
     function OnDelete() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -11205,7 +11204,7 @@ var __extends = undefined && undefined.__extends || function () {
 exports.__esModule = true;
 var $ = __webpack_require__(0);
 var MouseHandler_ts_1 = __webpack_require__(3);
-var ImageResizeHandler = function (_super) {
+var ImageResizeHandler = /** @class */function (_super) {
     __extends(ImageResizeHandler, _super);
     function ImageResizeHandler() {
         var _this = _super !== null && _super.apply(this, arguments) || this;

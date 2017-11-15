@@ -6,7 +6,7 @@ import {KeyboardHandler} from "../KeyboardHandler.ts";
 
 export class OnBackspace extends KeyboardHandler{
 	onDown(e){
-		let selected = $('.char.selected');
+		let selected = $('.selected');
 
 		if(selected.length < 1)
 			Caret.Backspace(1);
